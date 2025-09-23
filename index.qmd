@@ -1,8 +1,10 @@
 ---
-title: "nathaniams.github.io"
+title: "Nat's Site"
 ---
 
-This is a Quarto website.
+Welcome to my site. 
+
+This is a work in progress!
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
