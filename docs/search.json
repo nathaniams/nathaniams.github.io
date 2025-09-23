@@ -12,5 +12,19 @@
     "title": "About",
     "section": "",
     "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "Resources.html",
+    "href": "Resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "Quarto websites https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "Resources.html#helpful-sites",
+    "href": "Resources.html#helpful-sites",
+    "title": "Resources",
+    "section": "",
+    "text": "Quarto websites https://quarto.org/docs/websites."
   }
 ]

@@ -3,12 +3,13 @@ project:
   output-dir: docs
 
 website:
-  title: "nathaniams.github.io"
+  title: "Nat S."
   navbar:
     left:
       - href: index.qmd
         text: Home
       - about.qmd
+      - Resources.qmd
 
 format:
   html:
