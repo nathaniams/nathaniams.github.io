@@ -1,0 +1,13 @@
+---
+title: "Helpful Info"
+editor: visual
+---
+
+### Identify data types
+
+Is it a boolean, string, etc?
+
+```{r}
+x = 5
+class(x)
+```
