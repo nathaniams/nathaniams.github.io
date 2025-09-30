@@ -30,8 +30,64 @@
   {
     "objectID": "Helpfulinfo.html",
     "href": "Helpfulinfo.html",
-    "title": "Helpful Info",
+    "title": "Helpful R Info",
     "section": "",
-    "text": "Identify data types\nIs it a boolean, string, etc?\n\nx = 5\nclass(x)\n\n[1] \"numeric\"\n\n\n\n\nBasic Operations\nFloor will round down always.\n\nx = 3.2\nfloor(x)\n\n[1] 3\n\n\nCeiling will round up always.\n\nceiling(x)\n\n[1] 4"
+    "text": "Is it a logical (Boolean), string, etc?\n\nx = 5\nclass(x)\n\n[1] \"numeric\"\n\n\nOr use is….?\n\nis.numeric(x)\n\n[1] TRUE\n\n\n\n\n\n\nx = as.character(x)\nx\n\n[1] \"5\"\n\n\n\nis.numeric(x)\n\n[1] FALSE\n\n\n\nclass(x)\n\n[1] \"character\""
+  },
+  {
+    "objectID": "Helpfulinfo.html#data-types",
+    "href": "Helpfulinfo.html#data-types",
+    "title": "Helpful R Info",
+    "section": "",
+    "text": "Is it a logical (Boolean), string, etc?\n\nx = 5\nclass(x)\n\n[1] \"numeric\"\n\n\nOr use is….?\n\nis.numeric(x)\n\n[1] TRUE\n\n\n\n\n\n\nx = as.character(x)\nx\n\n[1] \"5\"\n\n\n\nis.numeric(x)\n\n[1] FALSE\n\n\n\nclass(x)\n\n[1] \"character\""
+  },
+  {
+    "objectID": "Helpfulinfo.html#binary-comparison-is-it-true-or-false",
+    "href": "Helpfulinfo.html#binary-comparison-is-it-true-or-false",
+    "title": "Helpful R Info",
+    "section": "Binary Comparison: Is it TRUE or FALSE?",
+    "text": "Binary Comparison: Is it TRUE or FALSE?\nUsing variable a and b:\n\na = 5\nb = 11\n\n\nIs a equal to b?\n\n\na == b\n\n[1] FALSE\n\n\n\nIs a less than b?\n\n\na &lt; b\n\n[1] TRUE\n\n\n\nIs a greater than b?\n\n\na &gt; b\n\n[1] FALSE\n\n\n\nIs a less than or equal to b?\n\n\na &lt;= b\n\n[1] TRUE\n\n\n\nIs a greater than or equal to b?\n\n\na &gt;= b\n\n[1] FALSE\n\n\n\nIs a not equal to b?\n\n\na != b\n\n[1] TRUE"
+  },
+  {
+    "objectID": "Helpfulinfo.html#basic-operations",
+    "href": "Helpfulinfo.html#basic-operations",
+    "title": "Helpful R Info",
+    "section": "Basic Operations",
+    "text": "Basic Operations\nFloor will round down always.\n\nx = 3.2\nfloor(x)\n\n[1] 3\n\n\nCeiling will round up always.\n\nceiling(x)\n\n[1] 4"
+  },
+  {
+    "objectID": "Helpfulinfo.html#variables",
+    "href": "Helpfulinfo.html#variables",
+    "title": "Helpful R Info",
+    "section": "Variables",
+    "text": "Variables\nAssign multiple variables at once.\n\na = b = 11\na\n\n[1] 11\n\nb\n\n[1] 11\n\n\n\nb\n\n[1] 11\n\n\n\nRemove a Variable\n\nrm(b)\n\n##Vectors Collection of elements, like a list.\n\nmyvector = c('apple', 'banana', 'orange', 'pineapple')\nmyvector\n\n[1] \"apple\"     \"banana\"    \"orange\"    \"pineapple\""
+  },
+  {
+    "objectID": "Helpfulinfo.html#what-does-the-colon-do-again",
+    "href": "Helpfulinfo.html#what-does-the-colon-do-again",
+    "title": "Helpful R Info",
+    "section": "What does the colon “:” do again?",
+    "text": "What does the colon “:” do again?\nCreate consecutive numbers without writing them all out using the “:”.\n\nz = c(1:10)\nz\n\n [1]  1  2  3  4  5  6  7  8  9 10"
+  },
+  {
+    "objectID": "Helpfulinfo.html#identify-data-types",
+    "href": "Helpfulinfo.html#identify-data-types",
+    "title": "Helpful R Info",
+    "section": "",
+    "text": "Is it a logical (Boolean), string, etc?\n\nx = 5\nclass(x)\n\n[1] \"numeric\"\n\n\nOr use is….?\n\nis.numeric(x)\n\n[1] TRUE"
+  },
+  {
+    "objectID": "Helpfulinfo.html#change-a-data-type",
+    "href": "Helpfulinfo.html#change-a-data-type",
+    "title": "Helpful R Info",
+    "section": "",
+    "text": "x = as.character(x)\nx\n\n[1] \"5\"\n\n\n\nis.numeric(x)\n\n[1] FALSE\n\n\n\nclass(x)\n\n[1] \"character\""
+  },
+  {
+    "objectID": "Helpfulinfo.html#remove-a-variable",
+    "href": "Helpfulinfo.html#remove-a-variable",
+    "title": "Helpful R Info",
+    "section": "Remove a Variable",
+    "text": "Remove a Variable\n\nrm(b)\n\n#Vectors Collection of elements, like a list.\n\nmyvector = c('apple', 'banana', 'orange', 'pineapple')\nmyvector\n\n[1] \"apple\"     \"banana\"    \"orange\"    \"pineapple\""
   }
 ]

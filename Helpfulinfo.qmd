@@ -3,9 +3,9 @@ title: "Helpful R Info"
 editor: visual
 ---
 
-### Data types
+# Data types
 
-#### Identify data types
+## Identify data types
 
 Is it a logical (Boolean), string, etc?
 
@@ -20,7 +20,7 @@ Or use is....?
 is.numeric(x)
 ```
 
-#### Change a data type
+## Change a data type
 
 ```{r}
 x = as.character(x)
@@ -35,7 +35,7 @@ is.numeric(x)
 class(x)
 ```
 
-### Binary Comparison: Is it TRUE or FALSE?
+# Binary Comparison: Is it TRUE or FALSE?
 
 Using variable **a** and **b**:
 
@@ -80,7 +80,7 @@ a >= b
 a != b
 ```
 
-### Basic Operations
+# Basic Operations
 
 Floor will round down always.
 
@@ -95,7 +95,7 @@ Ceiling will round up always.
 ceiling(x)
 ```
 
-### Variables
+# Variables
 
 Assign multiple variables at once.
 
@@ -109,9 +109,26 @@ b
 b
 ```
 
-#### Remove a Variable
+## Remove a Variable
 
 ```{r}
 rm(b)
-b
 ```
+
+#Vectors
+Collection of elements, like a list.
+```{r}
+myvector = c('apple', 'banana', 'orange', 'pineapple')
+myvector
+```
+
+# What does the colon ":" do again?
+Create consecutive numbers without writing them all out using the ":".
+```{r}
+z = c(1:10)
+z
+```
+
+
+
+
