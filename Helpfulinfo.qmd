@@ -38,33 +38,44 @@ class(x)
 ### Binary Comparison: Is it TRUE or FALSE?
 
 Using variable **a** and **b**:
+
 ```{r}
 a = 5
 b = 11
 ```
 
 -   Is **a** equal to **b**?
+
 ```{r}
 a == b
 ```
 
 -   Is **a** less than **b**?
+
 ```{r}
 a < b
 ```
-- Is **a** greater than **b**?
+
+-   Is **a** greater than **b**?
+
 ```{r}
 a > b
 ```
-- Is **a** less than or equal to **b**?
+
+-   Is **a** less than or equal to **b**?
+
 ```{r}
 a <= b
 ```
-- Is **a** greater than or equal to **b**?
+
+-   Is **a** greater than or equal to **b**?
+
 ```{r}
 a >= b
 ```
-- Is **a** not equal to **b**?
+
+-   Is **a** not equal to **b**?
+
 ```{r}
 a != b
 ```
