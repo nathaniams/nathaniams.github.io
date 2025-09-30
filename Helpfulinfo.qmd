@@ -1,24 +1,106 @@
 ---
-title: "Helpful Info"
+title: "Helpful R Info"
 editor: visual
 ---
 
-### Identify data types
+### Data types
 
-Is it a boolean, string, etc?
+#### Identify data types
+
+Is it a logical (Boolean), string, etc?
 
 ```{r}
 x = 5
 class(x)
 ```
+
+Or use is....?
+
+```{r}
+is.numeric(x)
+```
+
+#### Change a data type
+
+```{r}
+x = as.character(x)
+x
+```
+
+```{r}
+is.numeric(x)
+```
+
+```{r}
+class(x)
+```
+
+### Binary Comparison: Is it TRUE or FALSE?
+
+Using variable **a** and **b**:
+```{r}
+a = 5
+b = 11
+```
+
+-   Is **a** equal to **b**?
+```{r}
+a == b
+```
+
+-   Is **a** less than **b**?
+```{r}
+a < b
+```
+- Is **a** greater than **b**?
+```{r}
+a > b
+```
+- Is **a** less than or equal to **b**?
+```{r}
+a <= b
+```
+- Is **a** greater than or equal to **b**?
+```{r}
+a >= b
+```
+- Is **a** not equal to **b**?
+```{r}
+a != b
+```
+
 ### Basic Operations
+
 Floor will round down always.
+
 ```{r}
 x = 3.2
 floor(x)
 ```
+
 Ceiling will round up always.
+
 ```{r}
 ceiling(x)
 ```
 
+### Variables
+
+Assign multiple variables at once.
+
+```{r}
+a = b = 11
+a
+b
+```
+
+```{r}
+b
+```
+
+#### Remove a Variable
+
+```{r}
+rm(b)
+b
+```

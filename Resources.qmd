@@ -4,4 +4,5 @@ editor: visual
 ---
 
 ## Helpful sites
+
 Quarto websites <https://quarto.org/docs/websites>.
