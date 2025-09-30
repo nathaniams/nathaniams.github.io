@@ -32,6 +32,6 @@
     "href": "Helpfulinfo.html",
     "title": "Helpful Info",
     "section": "",
-    "text": "Identify data types\nIs it a boolean, string, etc?\n\nx = 5\nclass(x)\n\n[1] \"numeric\""
+    "text": "Identify data types\nIs it a boolean, string, etc?\n\nx = 5\nclass(x)\n\n[1] \"numeric\"\n\n\n\n\nBasic Operations\nFloor will round down always.\n\nx = 3.2\nfloor(x)\n\n[1] 3\n\n\nCeiling will round up always.\n\nceiling(x)\n\n[1] 4"
   }
 ]

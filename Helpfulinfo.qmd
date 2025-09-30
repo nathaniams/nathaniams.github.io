@@ -11,3 +11,14 @@ Is it a boolean, string, etc?
 x = 5
 class(x)
 ```
+### Basic Operations
+Floor will round down always.
+```{r}
+x = 3.2
+floor(x)
+```
+Ceiling will round up always.
+```{r}
+ceiling(x)
+```
+
