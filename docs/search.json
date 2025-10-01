@@ -89,5 +89,54 @@
     "title": "Helpful R Info",
     "section": "Remove a Variable",
     "text": "Remove a Variable\n\nrm(b)\n\n#Vectors Collection of elements, like a list.\n\nmyvector = c('apple', 'banana', 'orange', 'pineapple')\nmyvector\n\n[1] \"apple\"     \"banana\"    \"orange\"    \"pineapple\""
+  },
+  {
+    "objectID": "Helpfulinfo.html#what-directory-am-i-currently-in",
+    "href": "Helpfulinfo.html#what-directory-am-i-currently-in",
+    "title": "Helpful R Info",
+    "section": "What directory am I currently in?",
+    "text": "What directory am I currently in?\n\ngetwd()"
+  },
+  {
+    "objectID": "Helpfulinfo.html#how-do-i-change-my-directory",
+    "href": "Helpfulinfo.html#how-do-i-change-my-directory",
+    "title": "Helpful R Info",
+    "section": "How do I change my directory?",
+    "text": "How do I change my directory?\n\nsetwd(\"EnTeR NeW PaTh\") # use // or \\ for windows OS"
+  },
+  {
+    "objectID": "Helpfulinfo.html#view",
+    "href": "Helpfulinfo.html#view",
+    "title": "Helpful R Info",
+    "section": "View",
+    "text": "View\nTo see a data frame use “View”\n\nView(penguins)"
+  },
+  {
+    "objectID": "Helpfulinfo.html#summary",
+    "href": "Helpfulinfo.html#summary",
+    "title": "Helpful R Info",
+    "section": "Summary",
+    "text": "Summary\nSummary will provide a summary of the rows, including NA rows.\n\nsummary(penguins)\n\n      species          island       bill_len        bill_dep    \n Adelie   :152   Biscoe   :168   Min.   :32.10   Min.   :13.10  \n Chinstrap: 68   Dream    :124   1st Qu.:39.23   1st Qu.:15.60  \n Gentoo   :124   Torgersen: 52   Median :44.45   Median :17.30  \n                                 Mean   :43.92   Mean   :17.15  \n                                 3rd Qu.:48.50   3rd Qu.:18.70  \n                                 Max.   :59.60   Max.   :21.50  \n                                 NA's   :2       NA's   :2      \n  flipper_len      body_mass        sex           year     \n Min.   :172.0   Min.   :2700   female:165   Min.   :2007  \n 1st Qu.:190.0   1st Qu.:3550   male  :168   1st Qu.:2007  \n Median :197.0   Median :4050   NA's  : 11   Median :2008  \n Mean   :200.9   Mean   :4202                Mean   :2008  \n 3rd Qu.:213.0   3rd Qu.:4750                3rd Qu.:2009  \n Max.   :231.0   Max.   :6300                Max.   :2009  \n NA's   :2       NA's   :2"
+  },
+  {
+    "objectID": "Helpfulinfo.html#get-current-directory",
+    "href": "Helpfulinfo.html#get-current-directory",
+    "title": "Helpful R Info",
+    "section": "Get current directory",
+    "text": "Get current directory\nGet the current working directory you are in.\n\ngetwd()"
+  },
+  {
+    "objectID": "Helpfulinfo.html#change-directory",
+    "href": "Helpfulinfo.html#change-directory",
+    "title": "Helpful R Info",
+    "section": "Change directory",
+    "text": "Change directory\nChange your directory another location\n\nsetwd(\"EnTeR NeW PaTh\") # use // or \\ for windows OS"
+  },
+  {
+    "objectID": "Helpfulinfo.html#glimpse",
+    "href": "Helpfulinfo.html#glimpse",
+    "title": "Helpful R Info",
+    "section": "Glimpse",
+    "text": "Glimpse\nUse “glimpse” to see the number of rows, columns, and each of the column names with their data type.\n\nglimpse(penguins)"
   }
 ]
