@@ -138,5 +138,26 @@
     "title": "Helpful R Info",
     "section": "Glimpse",
     "text": "Glimpse\nUse “glimpse” to see the number of rows, columns, and each of the column names with their data type.\n\nglimpse(penguins)"
+  },
+  {
+    "objectID": "Helpfulinfo.html#head",
+    "href": "Helpfulinfo.html#head",
+    "title": "Helpful R Info",
+    "section": "Head",
+    "text": "Head\nSee the first few rows of the data frame.\n\nhead(penguins)\n\n  species    island bill_len bill_dep flipper_len body_mass    sex year\n1  Adelie Torgersen     39.1     18.7         181      3750   male 2007\n2  Adelie Torgersen     39.5     17.4         186      3800 female 2007\n3  Adelie Torgersen     40.3     18.0         195      3250 female 2007\n4  Adelie Torgersen       NA       NA          NA        NA   &lt;NA&gt; 2007\n5  Adelie Torgersen     36.7     19.3         193      3450 female 2007\n6  Adelie Torgersen     39.3     20.6         190      3650   male 2007"
+  },
+  {
+    "objectID": "Helpfulinfo.html#structure",
+    "href": "Helpfulinfo.html#structure",
+    "title": "Helpful R Info",
+    "section": "Structure",
+    "text": "Structure\n\nstr(penguins)\n\n'data.frame':   344 obs. of  8 variables:\n $ species    : Factor w/ 3 levels \"Adelie\",\"Chinstrap\",..: 1 1 1 1 1 1 1 1 1 1 ...\n $ island     : Factor w/ 3 levels \"Biscoe\",\"Dream\",..: 3 3 3 3 3 3 3 3 3 3 ...\n $ bill_len   : num  39.1 39.5 40.3 NA 36.7 39.3 38.9 39.2 34.1 42 ...\n $ bill_dep   : num  18.7 17.4 18 NA 19.3 20.6 17.8 19.6 18.1 20.2 ...\n $ flipper_len: int  181 186 195 NA 193 190 181 195 193 190 ...\n $ body_mass  : int  3750 3800 3250 NA 3450 3650 3625 4675 3475 4250 ...\n $ sex        : Factor w/ 2 levels \"female\",\"male\": 2 1 1 NA 1 2 1 2 NA NA ...\n $ year       : int  2007 2007 2007 2007 2007 2007 2007 2007 2007 2007 ..."
+  },
+  {
+    "objectID": "Helpfulinfo.html#check-for-nas",
+    "href": "Helpfulinfo.html#check-for-nas",
+    "title": "Helpful R Info",
+    "section": "Check for NAs",
+    "text": "Check for NAs\nCheck for NAs or not available/ missing values. Then determine what you will do with them. Will you get rid of them or insert a value? This only tells you yes and no there are NA values and how much but it wont tell you where those NAs are. However, summary above shows what columns they are in.\n\ntable(is.na(penguins))\n\n\nFALSE  TRUE \n 2733    19"
   }
 ]

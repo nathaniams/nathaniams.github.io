@@ -169,11 +169,23 @@ setwd("EnTeR NeW PaTh") # use // or \ for windows OS
 ```
 
 # Explore the data
+There are different ways to look at the data frame to get familiar with what is in it.
+
 ## View
 To see a data frame use "View"
 ```{r, eval=FALSE}
 View(penguins)
 ```
+## Head
+See the first few rows of the data frame.
+```{r}
+head(penguins)
+```
+## Structure
+```{r}
+str(penguins)
+```
+
 ## Summary
 Summary will provide a summary of the rows, including NA rows.
 ```{r}
@@ -183,6 +195,12 @@ summary(penguins)
 Use "glimpse" to see the number of rows, columns, and each of the column names with their data type.
 ```{r, eval=FALSE}
 glimpse(penguins)
+```
+## Check for NAs
+Check for NAs or not available/ missing values. Then determine what you will do with them. Will you get rid of them or insert a value?
+This only tells you yes and no there are NA values and how much but it wont tell you where those NAs are. However, summary above shows what columns they are in.
+```{r}
+table(is.na(penguins))
 ```
 
 # Creating a ggplot
