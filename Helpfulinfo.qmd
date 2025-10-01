@@ -35,7 +35,8 @@ is.numeric(x)
 class(x)
 ```
 
-# Binary Comparison: Is it TRUE or FALSE?
+# TRUE or FALSE?
+Binary Comparison, is it true or false?
 
 Using variable **a** and **b**:
 
@@ -95,6 +96,19 @@ Ceiling will round up always.
 ceiling(x)
 ```
 
+# Math?!
+
+Square root √
+
+```{r}
+sqrt(x)
+```
+
+Exponent
+```{r}
+3^2
+```
+
 # Variables
 
 Assign multiple variables at once.
@@ -115,20 +129,67 @@ b
 rm(b)
 ```
 
-#Vectors
-Collection of elements, like a list.
+#Vectors Collection of elements, like a list.
+
 ```{r}
 myvector = c('apple', 'banana', 'orange', 'pineapple')
 myvector
 ```
 
 # What does the colon ":" do again?
+
 Create consecutive numbers without writing them all out using the ":".
+
 ```{r}
 z = c(1:10)
 z
 ```
 
+Decreasing order
+```{r}
+10:2
+```
+# Data Frames
+Creating data frames
+w = 2*z
+```{r}
+w = 2*z
+y = c("a","b","c","d","e","f","g","h","i","j")
+```
+# Directory
+## Get current directory
+Get the current working directory you are in.
+```{r, eval=FALSE}
+getwd()
+```
+## Change directory
+Change your directory another location
+```{r, eval=FALSE}
+setwd("EnTeR NeW PaTh") # use // or \ for windows OS
+```
 
+# Explore the data
+## View
+To see a data frame use "View"
+```{r, eval=FALSE}
+View(penguins)
+```
+## Summary
+Summary will provide a summary of the rows, including NA rows.
+```{r}
+summary(penguins)
+```
+## Glimpse
+Use "glimpse" to see the number of rows, columns, and each of the column names with their data type.
+```{r, eval=FALSE}
+glimpse(penguins)
+```
 
+# Creating a ggplot
+Make sure to run the library for ggplot
+```{r}
+library(tidyverse)
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) +
+  geom_point()
+```
 
