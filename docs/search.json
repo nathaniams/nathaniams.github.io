@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Nat’s Site",
     "section": "",
-    "text": "Welcome to my site.\nThis is a work in progress!\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "This is a work in progress, but here you will find information about me, helpful R code I’ve learned since starting my Graduate Program at GMU, some helpful links, and my Redesign Project.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
   },
   {
     "objectID": "about.html",
@@ -16,14 +16,14 @@
   {
     "objectID": "Resources.html",
     "href": "Resources.html",
-    "title": "Resources",
+    "title": "Helpful Links",
     "section": "",
     "text": "Quarto websites https://quarto.org/docs/websites."
   },
   {
     "objectID": "Resources.html#helpful-sites",
     "href": "Resources.html#helpful-sites",
-    "title": "Resources",
+    "title": "Helpful Links",
     "section": "",
     "text": "Quarto websites https://quarto.org/docs/websites."
   },
@@ -158,6 +158,20 @@
     "href": "Helpfulinfo.html#check-for-nas",
     "title": "Helpful R Info",
     "section": "Check for NAs",
-    "text": "Check for NAs\nCheck for NAs or not available/ missing values. Then determine what you will do with them. Will you get rid of them or insert a value? This only tells you yes and no there are NA values and how much but it wont tell you where those NAs are. However, summary above shows what columns they are in.\n\ntable(is.na(penguins))\n\n\nFALSE  TRUE \n 2733    19"
+    "text": "Check for NAs\nCheck for NAs or not available/ missing values. Then determine what you will do with them. Will you get rid of them or insert a value? This only tells you yes and no there are NA values and how much but it wont tell you where those NAs are. However, summary above shows what columns they are in.x\n\ntable(is.na(penguins))\n\n\nFALSE  TRUE \n 2733    19"
+  },
+  {
+    "objectID": "Redesign.html",
+    "href": "Redesign.html",
+    "title": "Redesign Project",
+    "section": "",
+    "text": "The Original Design\nFor this project, an Outforia’s 2022 article on “The USA’s Search and Rescue Hotspots” was chosen. Within the article are four tables considering of either National Parks or States and their corresponding counts for particular a Search and Rescue (SAR) topic. The information is informative and helps readers quickly understand which US National Parks are dangerous based on the number of Search and Rescue events that have occurred between 2018-2020.\nThis article was chosen to enhance the the information provided through\n\n\n\n\n\n\n\nNPS Most Search and Rescues by Outforia\n\n\nThis redesign project focuses on the redesign of…\n\n\nAbout the data\n\n\nReferences\n[1] Borg, C., 2022, “The USA’s Search And Rescue Hotspots,” Outforia. [Online]. Available: https://outforia.com/search-and-rescue-hotspots/"
+  },
+  {
+    "objectID": "index.html#welcome-to-my-site.",
+    "href": "index.html#welcome-to-my-site.",
+    "title": "Nat’s Site",
+    "section": "",
+    "text": "This is a work in progress, but here you will find information about me, helpful R code I’ve learned since starting my Graduate Program at GMU, some helpful links, and my Redesign Project.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
   }
 ]

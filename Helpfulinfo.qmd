@@ -198,7 +198,7 @@ glimpse(penguins)
 ```
 ## Check for NAs
 Check for NAs or not available/ missing values. Then determine what you will do with them. Will you get rid of them or insert a value?
-This only tells you yes and no there are NA values and how much but it wont tell you where those NAs are. However, summary above shows what columns they are in.
+This only tells you yes and no there are NA values and how much but it wont tell you where those NAs are. However, summary above shows what columns they are in.x
 ```{r}
 table(is.na(penguins))
 ```
