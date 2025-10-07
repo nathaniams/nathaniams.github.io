@@ -55,3 +55,42 @@ ggplot(nps_sar, aes(x = reorder(NationalPark, NumberSARIncidents), y = NumberSAR
     title = "Number of Search and Rescue Incidents by Park from 2018-2020",
     x = NULL,
     y = "Number of Incidents") + hw
+
+
+##------------Map time-------------
+usa_tbl = map_data("state") %>% as_tibble()
+
+# To ensure the NPS SAR data matches, change state column to lowercase.
+nps_sar$State1 = tolower(nps_sar$State1)
+
+# Group by state and add totals
+library(dplyr)
+sarbystate = nps_sar %>%
+  group_by(State1) %>%
+  summarize(
+    TotalbyState = sum(NumberSARIncidents, na.rm = TRUE)) %>%
+  arrange(desc(TotalbyState))
+
+# Join the state map with the sar table
+usamapsar = left_join(usa_tbl, sarbystate, by = c('region' = 'State1'))
+
+# only get states with numbers
+map1 = usamapsar%>% filter(!is.na(usamapsar$TotalbyState))
+
+map2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
+  geom_polygon(aes(fill = TotalbyState), color = 'black') + 
+  scale_fill_gradient(name = '# of Incidents', low = 'yellow',
+                      high = 'red', na.value = 'grey80')
+
+map2
+
+# Use after the join....
+#usamap = usa_tbl %>%
+#  ggplot(aes(long,lat, map_id = region)) +
+#  geom_map(
+#    map = usa_tbl,
+#    color = "gray80", fill = "gray30", size = 0.3) +
+#  coord_cartesian()
+
+
+
