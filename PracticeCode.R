@@ -15,3 +15,4 @@ us_rent_income
 penguins
 View(penguins)
 summary(penguins)
+
