@@ -1,17 +1,17 @@
-﻿NationalPark,NumberSARIncidents,State1,State2,State3
-Grand Canyon National Park,785,Arizona,,
-Yosemite National Park,732,California,,
-Sequoia and Kings Canyon National Parks,503,California,,
-Yellowstone National Park,371,Wyoming,Idaho,Montana
-Rocky Mountain National Park,341,Colorado,,
-Zion National Park,285,Utah,,
-Glen Canyon National Recreation Area,279,Arizona,Utah,
-Grand Teton National Park,224,Wyoming,,
-Olympic National Park,204,Washington,,
-Arches National Park,202,Utah,,
-Great Smoky Mountains National Park,198,North Carolina,Tennessee,
-Glacier National Park,165,Montana,,
-Mount Rainier National Park,146,Washington,,
-Jewel Cave National Monument,133,South Dakota,,
-Buffalo National River,131,Arkansas,,
-Shenandoah National Park,131,Virginia,,
+﻿NationalPark,NumberSARIncidents,State1
+Grand Canyon National Park,785,Arizona
+Yosemite National Park,732,California
+Sequoia and Kings Canyon National Parks,503,California
+Yellowstone National Park,371,Wyoming
+Rocky Mountain National Park,341,Colorado
+Zion National Park,285,Utah
+Glen Canyon National Recreation Area,279,Utah
+Grand Teton National Park,224,Wyoming
+Olympic National Park,204,Washington
+Arches National Park,202,Utah
+Great Smoky Mountains National Park,198,North Carolina
+Glacier National Park,165,Montana
+Mount Rainier National Park,146,Washington
+Jewel Cave National Monument,133,South Dakota
+Buffalo National River,131,Arkansas
+Shenandoah National Park,131,Virginia
