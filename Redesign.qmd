@@ -7,7 +7,7 @@ editor: visual
 
 For this project, an Outforia's 2022 article on "[The USA's Search and Rescue Hotspots](https://outforia.com/search-and-rescue-hotspots/)" was chosen. Within the article are four tables consisting of either National Parks or States and their corresponding counts for particular a Search and Rescue (SAR) topic. The information is informative and helps readers quickly understand which US National Parks could be considered most dangerous based on the number of Search and Rescue incidents that occurred between 2018-2020.
 
-The first table provides the top 15 search and rescue incidents based on Number of incidents for a particular National Park.
+The first table provides the top 16 search and rescue incidents based on Number of incidents for a particular National Park.
 
 [![NPS Most Search and Rescues by Outforia](images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="497"}](https://outforia.com/search-and-rescue-hotspots/)
 
@@ -16,21 +16,29 @@ The second table provides the top 20 US States with the most search and rescue i
 [![States Most Search and Rescue by Outforia](images/States-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="594"}](https://outforia.com/search-and-rescue-hotspots/)
 
 # About the data
-To obtain the data Outforia submitted a freedom of information request to the National Park Service (NPS) for search and rescue incidents between 2018-2020 for all US national parks. In this project, data from the article and tables were used. Additionally information from NPS site was used to supplement additional information. For example, adding state to the national parks data. 
 
-In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. 
+To obtain the data Outforia submitted a freedom of information request to the National Park Service (NPS) for search and rescue incidents between 2018-2020 for all US national parks. In this project, data from the article and tables were used. Additionally information from NPS site was used to supplement additional information. For example, adding state to the national parks data.
+
+In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state.
 
 # Purpose of Redesign
 
 The objective of the redesign of these tables is to provide informative graphs to help readers further understand the data and hopefully help readers can make informed decisions about their next visit to a National Park.
 
 ## Redesign of Table 1
+
+In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still ordering the number of incidents from high to low. This chart also provides quick comparison of the bar sizes.
+
 ```{r}
+#| include: false
 library(tidyverse)
 library(ggplot2)
+```
 
+```{r}
+#| echo: false
 hw <- theme_gray()+ theme(
-  plot.title=element_text(hjust=0.5),
+  plot.title=element_text(hjust=-0.5),
   plot.subtitle=element_text(hjust=0.5),
   plot.caption=element_text(hjust=-.5),
   
@@ -58,9 +66,43 @@ ggplot(nps_sar, aes(x = reorder(NationalPark, NumberSARIncidents), y = NumberSAR
   geom_text(aes(label = NumberSARIncidents), vjust = 0.5, hjust = 1.5) +
   coord_flip() +
   labs(
-    title = "Number of Search and Rescue Incidents by Park from 2018-2020",
+    title = "Number of Search and Rescue Incidents by Park",
     x = NULL,
     y = "Number of Incidents") + hw
+```
+
+## Redesign of Table 2
+In this redesign, table 2 is transformed to provide an interactive map.
+```{r}
+usa_tbl = map_data("state") %>% as_tibble()
+
+# To ensure the NPS SAR data matches, change state column to lowercase.
+nps_sar$State1 = tolower(nps_sar$State1)
+
+# Group by state and add totals
+library(dplyr)
+sarbystate = nps_sar %>%
+  group_by(State1) %>%
+  summarize(
+    TotalbyState = sum(NumberSARIncidents, na.rm = TRUE)) %>%
+  arrange(desc(TotalbyState))
+
+# Join the state map with the sar table
+usamapsar = left_join(usa_tbl, sarbystate, by = c('region' = 'State1'))
+
+# only get states with numbers
+map1 = usamapsar%>% filter(!is.na(usamapsar$TotalbyState))
+
+map2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
+  geom_polygon(aes(fill = TotalbyState), color = 'black') + 
+  scale_fill_gradient(name = '# of Incidents', low = 'yellow',
+                      high = 'red', na.value = 'grey80') + 
+  coord_map() +
+  theme_minimal() +
+  labs(title = "Top 16 States with Search and Rescue Incidents", x ='', y = '') + 
+  theme(plot.title = element_text(size = 20))
+
+map2
 ```
 
 
