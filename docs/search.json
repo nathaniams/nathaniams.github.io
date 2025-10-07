@@ -165,7 +165,7 @@
     "href": "Redesign.html",
     "title": "Redesign Project",
     "section": "",
-    "text": "For this project, an Outforia’s 2022 article on “The USA’s Search and Rescue Hotspots” was chosen. Within the article are four tables consisting of either National Parks or States and their corresponding counts for particular a Search and Rescue (SAR) topic. The information is informative and helps readers quickly understand which US National Parks could be considered most dangerous based on the number of Search and Rescue incidents that occurred between 2018-2020.\nThe first table provides the top 16 search and rescue incidents based on Number of incidents for a particular National Park.\n\n\n\n\n\n\n\nNPS Most Search and Rescues by Outforia\n\n\nThe second table provides the top 20 US States with the most search and rescue incidents. Yes, Virginia made the list.\n\n\n\n\n\n\n\nStates Most Search and Rescue by Outforia"
+    "text": "For this project, an Outforia 2022 article on “The USA’s Search and Rescue Hotspots,” was chosen. Within the article are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. The information is informative and helps readers quickly understand which US National Parks could be considered most dangerous based on the number of Search and Rescue incidents that occurred between 2018-2020. Considering the context of this article and the author’s statement found at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of nature. It is also likely that the article is intended to help novice outdoor adventurers, providing insight into the highest number of search and rescue events.\nThe first table provides the top 16 search and rescue incidents based on Number of incidents for a particular National Park between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer.\n\n\n\n\n\n\n\nNPS Most Search and Rescues by Outforia\n\n\nThe second table provides the top 20 US States with the most search and rescue incidents. Yes, Virginia made the list.\n\n\n\n\n\n\n\nStates Most Search and Rescue by Outforia"
   },
   {
     "objectID": "index.html#welcome-to-my-site.",
@@ -186,6 +186,34 @@
     "href": "Redesign.html#redesign-of-table-2",
     "title": "Redesign Project",
     "section": "Redesign of Table 2",
-    "text": "Redesign of Table 2\nIn this redesign, table 2 is transformed to provide an interactive map.\n\nusa_tbl = map_data(\"state\") %&gt;% as_tibble()\n\n# To ensure the NPS SAR data matches, change state column to lowercase.\nnps_sar$State1 = tolower(nps_sar$State1)\n\n# Group by state and add totals\nlibrary(dplyr)\nsarbystate = nps_sar %&gt;%\n  group_by(State1) %&gt;%\n  summarize(\n    TotalbyState = sum(NumberSARIncidents, na.rm = TRUE)) %&gt;%\n  arrange(desc(TotalbyState))\n\n# Join the state map with the sar table\nusamapsar = left_join(usa_tbl, sarbystate, by = c('region' = 'State1'))\n\n# only get states with numbers\nmap1 = usamapsar%&gt;% filter(!is.na(usamapsar$TotalbyState))\n\nmap2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +\n  geom_polygon(aes(fill = TotalbyState), color = 'black') + \n  scale_fill_gradient(name = '# of Incidents', low = 'yellow',\n                      high = 'red', na.value = 'grey80') + \n  coord_map() +\n  theme_minimal() +\n  labs(title = \"Top 16 States with Search and Rescue Incidents\", x ='', y = '') + \n  theme(plot.title = element_text(size = 20))\n\nmap2"
+    "text": "Redesign of Table 2\nIn this redesign, table 2 is transformed to provide an interactive map."
+  },
+  {
+    "objectID": "Redesign.html#the-original-design",
+    "href": "Redesign.html#the-original-design",
+    "title": "Redesign Project",
+    "section": "",
+    "text": "For this project, an Outforia 2022 article on “The USA’s Search and Rescue Hotspots,” was chosen. Within the article are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. The information is informative and helps readers quickly understand which US National Parks could be considered most dangerous based on the number of Search and Rescue incidents that occurred between 2018-2020. Considering the context of this article and the author’s statement found at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of nature. It is also likely that the article is intended to help novice outdoor adventurers, providing insight into the highest number of search and rescue events.\nThe first table provides the top 16 search and rescue incidents based on Number of incidents for a particular National Park between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer.\n\n\n\n\n\n\n\nNPS Most Search and Rescues by Outforia\n\n\nThe second table provides the top 20 US States with the most search and rescue incidents. Yes, Virginia made the list.\n\n\n\n\n\n\n\nStates Most Search and Rescue by Outforia"
+  },
+  {
+    "objectID": "Redesign.html#about-the-data",
+    "href": "Redesign.html#about-the-data",
+    "title": "Redesign Project",
+    "section": "About the data",
+    "text": "About the data\nTo obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In this project, data from the article and tables were used. Additional information from National Park Services (NPS) site was used to supplement additional information. For example, adding state to the national parks data.\nIn cases where national parks spanned more than one state, Outforia counted the number of incidents for each state."
+  },
+  {
+    "objectID": "Redesign.html#purpose-of-redesign",
+    "href": "Redesign.html#purpose-of-redesign",
+    "title": "Redesign Project",
+    "section": "Purpose of Redesign",
+    "text": "Purpose of Redesign\nThe objective of the redesign of these tables is to provide informative graphs to help readers further interpret the data. Hopefully helping readers make informed decisions about their next visit to a National Park. To ensure proper redesign, the graphs will focus on providing accurate comparisons, simplified and clear graphs, provide appropriate context when needed, and engage readers.\n\nRedesign of Table 1\nIn this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still ordering the number of incidents from high to low. This chart also provides quick comparison of the bar sizes.\n\n\n\n\n\n\n\n\n\n\n\nRedesign of Table 1\nIn this redesign, table 1 is transformed to provide a map."
+  },
+  {
+    "objectID": "Redesign.html#references",
+    "href": "Redesign.html#references",
+    "title": "Redesign Project",
+    "section": "References",
+    "text": "References\n[1] Borg, C., 2022, “The USA’s Search And Rescue Hotspots,” Outforia. [Online]. Available: https://outforia.com/search-and-rescue-hotspots/"
   }
 ]
