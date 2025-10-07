@@ -4,15 +4,25 @@ editor: visual
 ---
 
 # The Original Design
-For this project, an Outforia's 2022 article on "The USA's Search and Rescue Hotspots" was chosen. Within the article are four tables considering of either National Parks or States and their corresponding counts for particular a Search and Rescue (SAR) topic. The information is informative and helps readers quickly understand which US National Parks are dangerous based on the number of Search and Rescue events that have occurred between 2018-2020.
 
-This article was chosen to enhance the the information provided through 
+For this project, an Outforia's 2022 article on "[The USA's Search and Rescue Hotspots](https://outforia.com/search-and-rescue-hotspots/)" was chosen. Within the article are four tables consisting of either National Parks or States and their corresponding counts for particular a Search and Rescue (SAR) topic. The information is informative and helps readers quickly understand which US National Parks could be considered most dangerous based on the number of Search and Rescue incidents that occurred between 2018-2020.
+
+The first table provides the top 15 search and rescue incidents based on Number of incidents for a particular National Park.
 
 [![NPS Most Search and Rescues by Outforia](images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="497"}](https://outforia.com/search-and-rescue-hotspots/)
 
-This redesign project focuses on the redesign of...
+The second table provides the top 20 US States with the most search and rescue incidents. *Yes, Virginia made the list.*
+
+[![States Most Search and Rescue by Outforia](images/States-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="594"}](https://outforia.com/search-and-rescue-hotspots/)
+
+# Purpose of Redesign
+
+The objective of the redesign of these tables is to provide additional context and graphs to help readers further understand the data and hopefully help readers make informed decisions about their next visit to a National Park.
 
 # About the data
+To obtain the data Outforia submitted a freedom of information request to the National Park Service (NPS) for search and rescue incidents between 2018-2020 for all US national parks. In this project, ONLY data from the article and tables were used. 
+
+In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. 
 
 # References
 
