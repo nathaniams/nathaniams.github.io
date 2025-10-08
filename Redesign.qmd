@@ -200,7 +200,7 @@ Initially, an unusual error occurred when trying to render from R Studio to html
 
 ## Video Presentation
 This is a test.
-{{< video https://www.youtube.com/embed/wo9vZccmqwc title='What is the CERN?' >}}
+{{< video https://youtu.be/QJKEgrevEYk title='What is the CERN?' >}}
 
 ## References
 
