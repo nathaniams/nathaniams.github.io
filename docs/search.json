@@ -278,5 +278,12 @@
     "title": "Redesign Code",
     "section": "Redesign 2: Choropleth map with Alaska",
     "text": "Redesign 2: Choropleth map with Alaska\n\n# Use us_map to get all states but only take full and geom columns\nSARstates = read.csv('StatesSAR.csv')\nusa = us_map('states')\nusa_sub = usa[, c(\"full\", \"geom\")]\nusajoinsar = left_join(usa_sub, SARstates, by = c('full' = 'State'))\n\nggplot() +\n  geom_sf(data=usajoinsar, aes(fill= NumberSARIncidents), color = 'gray70') +\n  scale_fill_gradient(name = '# of SAR Incidents', low = 'yellow', high = 'red', na.value = 'grey30') +\n  labs(title = \"Top 20 States\", \n       subtitle = \"with the Most Search and Rescue Incidents\",\n       caption = c('Gray represents no data')) +\n  theme_void() +\n  theme(title = element_text(face = 'bold'),\n        legend.position = 'bottom')"
+  },
+  {
+    "objectID": "Redesign.html#video-presentation",
+    "href": "Redesign.html#video-presentation",
+    "title": "Redesign Project",
+    "section": "Video Presentation",
+    "text": "Video Presentation\nThis is a test."
   }
 ]
