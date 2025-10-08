@@ -101,9 +101,35 @@ map2
 library(leaflet)
 library(tidyverse)
 
-leaflet() %>%
-  setView(lng = -98.15283557273337, lat = 38.91144189140998, zoom = 5) %>%
-  addProviderTiles(providers$Esri.WorldGrayCanvas)
+#leaflet() %>%
+#  setView(lng = -98.15283557273337, lat = 38.91144189140998, zoom = 5) %>%
+#  addProviderTiles(providers$Esri.WorldGrayCanvas)
+
+npspoints = read.csv('NPSBoundary.csv')
+
+topnps = nps_sar$NationalPark
+
+topnps = c(topnps, 'Sequoia National Park', 'Kings Canyon National Park')
+
+filtered_npspoints = npspoints %>%
+  filter(UNIT_NAME %in% topnps)
+
+#leaflet(filtered_npspoints) %>%
+#  setView(lng = -98.15283557273337, lat = 38.91144189140998, zoom = 5) %>%
+#  addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
+#  addMarkers(lng = ~x,
+#             lat = ~y,
+#             label = ~UNIT_NAME)
+
+#leaflet(filtered_npspoints) %>%
+#  leaflet::addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
+#  addMarkers(lng = ~y, lat = ~x)
+
+leaflet(filtered_npspoints)%>% 
+  addTiles() %>% 
+  addMarkers(lng = ~x,
+             lat = ~y,
+             label = ~UNIT_NAME)
 
 ## ------------------Redesign for Table 2--------------------
 statesSAR = read.csv('StatesSAR.csv')
@@ -140,21 +166,25 @@ filteredUSA %>%
     map = filteredUSA,
     color = 'gray80', fill = 'gray30', size = 0.3) +
   coord_map()
+##--- no good ^
+
 
 install.packages("usmap")
 library(usmap)
 library(ggplot2)
 library(sf)
+library(dplyr)
 
+usa = us_map('')
+usa_sub = usa[, c("full", "geom")]
+usajoinsar = left_join(usa_sub, statesSAR, by = c('full' = 'State'))
 
-usa = us_map() %>%
-  select(full, geom)
-plot(usa)
+# Use us_map to get all states but only take full and geom columns
+#usa = us_map() %>%
+#  select(full, geom)
 
 # join the SAR data with the above
-usajoinsar = left_join(usa, statesSAR, by = c('full' = 'State'))
-
-plot(usajoinsar)
+#usajoinsar = left_join(usa, statesSAR, by = c('full' = 'State'))
 
 mapwithalaska = ggplot() +
   geom_sf(data=usajoinsar, aes(fill= NumberSARIncidents), color = 'gray70') +
@@ -168,6 +198,6 @@ mapwithalaska = ggplot() +
 
 mapwithalaska
 
-
+df = us_map('states')
 
 

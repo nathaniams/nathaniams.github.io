@@ -5,13 +5,13 @@ editor: visual
 
 ## The Original Design
 
-For this project, an Outforia 2022 article on "[The USA's Search and Rescue Hotspots](https://outforia.com/search-and-rescue-hotspots/)," was chosen. Within the article there are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. For this project, two of the four tables were chosen for a redesign. 
+For this project, an Outforia 2022 article on "[The USA's Search and Rescue Hotspots](https://outforia.com/search-and-rescue-hotspots/)," was chosen. Within the article there are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. For this project, two of the four tables were chosen for a redesign.
 
 While the article is informative and helps readers understand which US National Parks could be considered most dangerous, the goal of this project was to enhance the visualization through best practices and improved graph design using R.
 
 The article focuses on Search and Rescue incidents that occurred between 2018-2020 within US National Parks. Considering the context and the author's statement at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of national parks. It is also likely that the article is intended to help novice outdoor adventurers by providing awareness into the highest number of search and rescue events.This helps readers make informed decisions regarding their next outdoor adventure!
 
-The first table provides the top 16 national parks with the highest number of incidents between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer. Another consideration is the unnecessary visual at the top of the table. Above the table are the three parks with the highest number of incidents. The only additional information provided are the states the parks reside in; however, this is easily overlooked based on their position, color, and pretty yet distracting pictures. 
+The first table provides the top 16 national parks with the highest number of incidents between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer. Another consideration is the unnecessary visual at the top of the table. Above the table are the three parks with the highest number of incidents. The only additional information provided are the states the parks reside in; however, this is easily overlooked based on their position, color, and pretty yet distracting pictures.
 
 [![NPS Most Search and Rescues by Outforia](images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="497"}](https://outforia.com/search-and-rescue-hotspots/)
 
@@ -21,7 +21,7 @@ The second table provides the top 20 US States with the most search and rescue i
 
 ## About the data
 
-To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. In this redesign project, data from the article and tables were used. 
+To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. In this redesign project, data from the article and tables were used.
 
 Additional information from National Park Services (NPS) site was used to supplement additional information. For example, adding state to the national parks data.
 
@@ -114,10 +114,32 @@ map2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
 
 map2
 ```
+### Redesign of Table 1, a better look
+```{r}
+#| echo: false
+library(leaflet)
+library(tidyverse)
+npspoints = read.csv('NPSBoundary.csv')
+
+topnps = nps_sar$NationalPark
+
+topnps = c(topnps, 'Sequoia National Park', 'Kings Canyon National Park')
+
+filtered_npspoints = npspoints %>%
+  filter(UNIT_NAME %in% topnps)
+
+leaflet(filtered_npspoints)%>% 
+  addTiles() %>% 
+  addMarkers(lng = ~x,
+             lat = ~y,
+             label = ~UNIT_NAME)
+
+```
+
 
 ### Redesign of Table 2
 
-In table 2 we see more states with the total number of Search and Rescue incidents from 2018-2020. Here it seems like the visual is on the right track; however, after counting the states there are only 19! Oh yes, sneaky Alaska and Hawaii are not in the picture. 
+In table 2 we see more states with the total number of Search and Rescue incidents from 2018-2020. Here it seems like the visual is on the right track; however, after counting the states there are only 19! Oh yes, sneaky Alaska and Hawaii are not in the picture.
 
 ```{r}
 #| echo: false

@@ -12,6 +12,8 @@ website:
       - Helpfulinfo.qmd
       - Resources.qmd
       - Redesign.qmd
+      - RedesignCode.qmd
+      
       
 format:
   html:
