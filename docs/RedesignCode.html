@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Redesign Project – Nat S.</title>
+<title>Redesign Code – Nat S.</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -67,26 +102,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-
-<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
-
-<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
-
-<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
-
-<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
-
-<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
-
-<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
-
-<script src="site_libs/leaflet-binding-2.2.3/leaflet.js"></script>
-
 
 
 <link rel="stylesheet" href="styles.css">
@@ -126,12 +141,13 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Helpful Links</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./Redesign.html" aria-current="page"> 
+    <a class="nav-link" href="./Redesign.html"> 
 <span class="menu-text">Redesign Project</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./RedesignCode.html"> 
-<span class="menu-text">Redesign Code</span></a>
+    <span class="nav-link">
+<span class="menu-text">RedsignCode.qmd</span>
+    </span>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -148,16 +164,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-original-design" id="toc-the-original-design" class="nav-link active" data-scroll-target="#the-original-design">The Original Design</a></li>
-  <li><a href="#about-the-data" id="toc-about-the-data" class="nav-link" data-scroll-target="#about-the-data">About the data</a></li>
-  <li><a href="#purpose-of-redesign" id="toc-purpose-of-redesign" class="nav-link" data-scroll-target="#purpose-of-redesign">Purpose of Redesign</a>
-  <ul>
-  <li><a href="#redesign-of-table-1" id="toc-redesign-of-table-1" class="nav-link" data-scroll-target="#redesign-of-table-1">Redesign of Table 1</a></li>
-  <li><a href="#redesign-of-table-1-another-look" id="toc-redesign-of-table-1-another-look" class="nav-link" data-scroll-target="#redesign-of-table-1-another-look">Redesign of Table 1, another look</a></li>
-  <li><a href="#redesign-of-table-1-a-better-look" id="toc-redesign-of-table-1-a-better-look" class="nav-link" data-scroll-target="#redesign-of-table-1-a-better-look">Redesign of Table 1 a better look</a></li>
-  <li><a href="#redesign-of-table-2" id="toc-redesign-of-table-2" class="nav-link" data-scroll-target="#redesign-of-table-2">Redesign of Table 2</a></li>
-  </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link active" data-scroll-target="#libraries">Libraries</a></li>
+  <li><a href="#theme" id="toc-theme" class="nav-link" data-scroll-target="#theme">Theme</a></li>
   </ul>
 </nav>
 </nav>
@@ -170,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Redesign Project</h1>
+<h1 class="title">Redesign Code</h1>
 </div>
 
 
@@ -187,107 +195,53 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="the-original-design" class="level2">
-<h2 class="anchored" data-anchor-id="the-original-design">The Original Design</h2>
-<p>For this project, an Outforia 2022 article on “<a href="https://outforia.com/search-and-rescue-hotspots/">The USA’s Search and Rescue Hotspots</a>,” was chosen. Within the article there are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. For this project, two of the four tables were chosen for a redesign.</p>
-<p>While the article is informative and helps readers understand which US National Parks could be considered most dangerous, the goal of this project was to enhance the visualization through best practices and improved graph design using R.</p>
-<p>The article focuses on Search and Rescue incidents that occurred between 2018-2020 within US National Parks. Considering the context and the author’s statement at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of national parks. It is also likely that the article is intended to help novice outdoor adventurers by providing awareness into the highest number of search and rescue events.This helps readers make informed decisions regarding their next outdoor adventure!</p>
-<p>The first table provides the top 16 national parks with the highest number of incidents between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer. Another consideration is the unnecessary visual at the top of the table. Above the table are the three parks with the highest number of incidents. The only additional information provided are the states the parks reside in; however, this is easily overlooked based on their position, color, and pretty yet distracting pictures.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://outforia.com/search-and-rescue-hotspots/"><img src="images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="497"></a></p>
-</figure>
-</div>
-<figcaption>NPS Most Search and Rescues by Outforia</figcaption>
-</figure>
-</div>
-<p>The second table provides the top 20 US States with the most search and rescue incidents. <em>Yes, Virginia made the list.</em> In this table we have more information on total search and rescue incidents, but grouped by State instead of individual parks. This provides a holistic view of incidents across a given state. Again we are given a table, which doesn’t offer fast comparison and the top three states which offer no additional information from the table but does offer a picture of the states’ flags.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://outforia.com/search-and-rescue-hotspots/"><img src="images/States-most-search-and-rescue-incidents-infographics-122121.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="594"></a></p>
-</figure>
-</div>
-<figcaption>States Most Search and Rescue by Outforia</figcaption>
-</figure>
-</div>
-</section>
-<section id="about-the-data" class="level2">
-<h2 class="anchored" data-anchor-id="about-the-data">About the data</h2>
-<p>To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. In this redesign project, data from the article and tables were used.</p>
-<p>Additional information from National Park Services (NPS) site was used to supplement additional information. For example, adding state to the national parks data.</p>
-</section>
-<section id="purpose-of-redesign" class="level2">
-<h2 class="anchored" data-anchor-id="purpose-of-redesign">Purpose of Redesign</h2>
-<p>The objectives of redesigning these tables are to provide informative graphs to help readers further interpret the data. By ensuring the graphs focus on accurate comparisons, simplified and uncluttered graphs, and appropriate context to keep the readers engaged. This will help readers make informed decisions about their next visit to a National Park.</p>
-<section id="redesign-of-table-1" class="level3">
-<h3 class="anchored" data-anchor-id="redesign-of-table-1">Redesign of Table 1</h3>
-<p>In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still arranging the number of incidents from high to low. Also, this chart provides quick comparison for readers to easily compare bar lengths.</p>
+<section id="libraries" class="level2">
+<h2 class="anchored" data-anchor-id="libraries">Libraries</h2>
 <div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Redesign_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="redesign-of-table-1-another-look" class="level3">
-<h3 class="anchored" data-anchor-id="redesign-of-table-1-another-look">Redesign of Table 1, another look</h3>
-<p>In this redesign, table 1 is transformed to provide a map view of the data. This takes a different approach to understanding the search and rescue incidents from table 1. Here we are still using the same data from table 1, but instead of representing the park the state is used instead to represent states with the most incidents. This is another way to visualize the information from table 1, although not complete. Another consideration is that some National Parks span more than one state. In this map, only one state was selected for each National Park. If data was available for each of the search and rescue events, then we could plot those events and have a more exact number of what state the incidents occurred in.</p>
+<section id="theme" class="level2">
+<h2 class="anchored" data-anchor-id="theme">Theme</h2>
 <div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Redesign_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hw <span class="ot">&lt;-</span> <span class="fu">theme_gray</span>()<span class="sc">+</span> <span class="fu">theme</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.title=</span><span class="fu">element_text</span>(<span class="at">hjust=</span><span class="fl">0.5</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.subtitle=</span><span class="fu">element_text</span>(<span class="at">hjust=</span><span class="fl">0.5</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.caption=</span><span class="fu">element_text</span>(<span class="at">hjust=</span><span class="sc">-</span>.<span class="dv">5</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">strip.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">strip.background=</span><span class="fu">element_rect</span>(<span class="at">fill=</span><span class="fu">rgb</span>(.<span class="dv">9</span>,.<span class="dv">95</span>,<span class="dv">1</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                                <span class="at">colour=</span><span class="fu">gray</span>(.<span class="dv">5</span>), <span class="at">linewidth =</span>.<span class="dv">2</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.border=</span><span class="fu">element_rect</span>(<span class="at">fill=</span><span class="cn">FALSE</span>,<span class="at">colour=</span><span class="fu">gray</span>(.<span class="dv">70</span>)),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.spacing.x =</span> <span class="fu">unit</span>(<span class="fl">0.10</span>,<span class="st">"cm"</span>),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.spacing.y =</span> <span class="fu">unit</span>(<span class="fl">0.05</span>,<span class="st">"cm"</span>),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># axis.ticks.y= element_blank()</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.ticks=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">colour=</span><span class="st">"black"</span>),</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.text.y=</span><span class="fu">element_text</span>(<span class="at">margin=</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">3</span>)),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">margin=</span><span class="fu">margin</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</div>
-</section>
-<section id="redesign-of-table-1-a-better-look" class="level3">
-<h3 class="anchored" data-anchor-id="redesign-of-table-1-a-better-look">Redesign of Table 1 a better look</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-73f040479adf98d002c9" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-73f040479adf98d002c9">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[38.47242981,38.70792359,48.61885639,37.39802645,43.82629944,40.35734318,37.27952483,43.73100119,44.58303878,35.62215504,36.04003077,36.30988425,36.49636864,36.87494725,37.84128363,46.85465295,47.7867324],[-78.46395182000001,-109.595467,-113.7562826,-110.8021386,-110.6855868,-105.703659,-113.0457281,-103.8316336,-110.4900951,-83.49809989000001,-93.30985962,-112.2996985,-118.5603889,-118.5938531,-119.5428407,-121.7064438,-123.5342588],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Shenandoah National Park","Arches National Park","Glacier National Park","Glen Canyon National Recreation Area","Grand Teton National Park","Rocky Mountain National Park","Zion National Park","Jewel Cave National Monument","Yellowstone National Park","Great Smoky Mountains National Park","Buffalo National River","Grand Canyon National Park","Sequoia National Park","Kings Canyon National Park","Yosemite National Park","Mount Rainier National Park","Olympic National Park"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[35.62215504,48.61885639],"lng":[-123.5342588,-78.46395182000001]}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-</section>
-<section id="redesign-of-table-2" class="level3">
-<h3 class="anchored" data-anchor-id="redesign-of-table-2">Redesign of Table 2</h3>
-<p>In table 2 we see more states with the total number of Search and Rescue incidents from 2018-2020. Here it seems like the visual is on the right track; however, after counting the states there are only 19! Oh yes, sneaky Alaska and Hawaii are not in the picture.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Redesign_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here we must take another approach to the map view this time using library(usmap) and library(sf).</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Redesign_files/figure-html/map-plot-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>An unusual error occurred when trying to render from R Studio to Quarto. The above map is missing the data overlay. The map generated without issues in R Studio. Hence the workaround, saving the ggplot as an image and adding to the markup.</p>
-<p><img src="RplotTop20.jpeg" class="img-fluid"></p>
-<p>Now we have all top 20 states properly represented on the map. To reduce clutter and unnecessary information the x-axis and y-axis were removed. This is not only good practice to reduce clutter but another consideration is the placement of Alaska, Hawaii, and Puerto Rico. They are placed here to include them in the graph not to represent their locations.</p>
-</section>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<p>[1] Borg, C., 2022, “The USA’s Search And Rescue Hotspots,” Outforia. [Online]. Available: https://outforia.com/search-and-rescue-hotspots/</p>
 
 
 </section>
