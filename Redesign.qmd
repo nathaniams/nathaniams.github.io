@@ -115,6 +115,7 @@ map2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
 map2
 ```
 ### Redesign of Table 1, a better look
+Here is another way to visualize the information that blends location while still providing the number of Search and Rescue Incidents for the top parks.
 ```{r}
 #| echo: false
 library(leaflet)
@@ -128,11 +129,13 @@ topnps = c(topnps, 'Sequoia National Park', 'Kings Canyon National Park')
 filtered_npspoints = npspoints %>%
   filter(UNIT_NAME %in% topnps)
 
+filtered_npspoints$NumberSARIncidents = c(131,202,165,279,224,341,285,133,371,198,131,785,300,203,732,146,204)
+
 leaflet(filtered_npspoints)%>% 
   addTiles() %>% 
   addMarkers(lng = ~x,
              lat = ~y,
-             label = ~UNIT_NAME)
+             label = ~paste0(UNIT_NAME,"; Incidents: ", NumberSARIncidents))
 
 ```
 
