@@ -10,6 +10,8 @@ library(ggplot2)
 library(dplyr)
 library(leaflet)
 library(tidyverse)
+library(usmap)
+library(sf)
 ```
 
 ## Default Class Theme
@@ -35,5 +37,119 @@ hw <- theme_gray()+ theme(
   axis.text.y=element_text(margin=margin(0,3,0,3)),
   axis.text.x=element_text(margin=margin(-1,0,3,0))
 )
+```
+
+## Redesign 1: Bar chart
+
+```{r}
+nps_sar = read.csv('NPmostSARincidents.csv')
+
+ggplot(nps_sar, aes(x = reorder(NationalPark, NumberSARIncidents), y = NumberSARIncidents)) +
+  geom_bar(stat = 'identity', fill = 'forestgreen')  +
+  coord_flip() +
+  labs(
+    title = "Number of Search and Rescue Incidents by Park",
+    x = NULL,
+    y = "Number of Incidents") + hw
+```
+
+## Redesign 1: Chorophelt map
+
+```{r}
+usa_tbl = map_data("state") %>% as_tibble()
+
+# To ensure the NPS SAR data matches, change state column to lowercase.
+nps_sar$State1 = tolower(nps_sar$State1)
+
+# Group by state and add totals
+library(dplyr)
+sarbystate = nps_sar %>%
+  group_by(State1) %>%
+  summarize(
+    TotalbyState = sum(NumberSARIncidents, na.rm = TRUE)) %>%
+  arrange(desc(TotalbyState))
+
+# Join the state map with the sar table
+usamapsar = left_join(usa_tbl, sarbystate, by = c('region' = 'State1'))
+
+map1 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
+  geom_polygon(aes(fill = TotalbyState), color = 'black') + 
+  scale_fill_gradient(name = '# of Incidents', low = 'yellow',
+                      high = 'red', na.value = 'grey80') + 
+  coord_map() +
+  theme_minimal() +
+  labs(
+    title = "Top 11 States with Search and Rescue Incidents", 
+    x ='', 
+    y = '',
+    caption = '*Gray states contain no data') + 
+  theme(plot.title = element_text(size = 20))
+
+map1
+```
+
+## Redesign 1: Interactive Map
+
+```{r}
+npspoints = read.csv('NPSBoundary.csv')
+
+topnps = nps_sar$NationalPark
+
+topnps = c(topnps, 'Sequoia National Park', 'Kings Canyon National Park')
+
+filtered_npspoints = npspoints %>%
+  filter(UNIT_NAME %in% topnps)
+
+filtered_npspoints$NumberSARIncidents = c(131,202,165,279,224,341,285,133,371,198,131,785,300,203,732,146,204)
+
+leaflet(filtered_npspoints)%>% 
+  addTiles() %>% 
+  addMarkers(lng = ~x,
+             lat = ~y,
+             label = ~paste0(UNIT_NAME,"; Incidents: ", NumberSARIncidents))
+```
+
+## Redesign 2: Choropleth Map
+
+```{r}
+statesSAR = read.csv('StatesSAR.csv')
+
+# lower case states
+statesSAR$State = tolower(statesSAR$State)
+
+statesSARmap = left_join(usa_tbl, statesSAR, by = c('region' = 'State'))
+
+mapSAR = ggplot(statesSARmap, aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = NumberSARIncidents), color = 'black') +
+  scale_fill_gradient(name = '# of SAR Incidents', low = 'yellow',
+                      high = 'red', na.value = 'grey80') +
+  coord_map() +
+  labs(
+    title = "Top 20 States with the Most Search and Rescue Incidents",
+    x = '',
+    y = '',
+    caption = '*Gray represents no data') +
+  theme(plot.title = element_text(size = 15)) + theme_minimal()
+
+mapSAR
+```
+
+## Redesign 2: Choropleth map with Alaska
+```{r}
+# Use us_map to get all states but only take full and geom columns
+SARstates = read.csv('StatesSAR.csv')
+usa = us_map('states')
+usa_sub = usa[, c("full", "geom")]
+usajoinsar = left_join(usa_sub, SARstates, by = c('full' = 'State'))
+
+ggplot() +
+  geom_sf(data=usajoinsar, aes(fill= NumberSARIncidents), color = 'gray70') +
+  scale_fill_gradient(name = '# of SAR Incidents', low = 'yellow', high = 'red', na.value = 'grey30') +
+  labs(title = "Top 20 States", 
+       subtitle = "with the Most Search and Rescue Incidents",
+       caption = c('Gray represents no data')) +
+  theme_void() +
+  theme(title = element_text(face = 'bold'),
+        legend.position = 'bottom')
 ```
 
