@@ -5,7 +5,7 @@ editor: visual
 
 ## The Original Design
 
-For this project, an Outforia 2022 article on "[The USA's Search and Rescue Hotspots](https://outforia.com/search-and-rescue-hotspots/)," was chosen. Within the article there are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. For this project, two of the four tables were chosen for a redesign.
+For this project, an Outforia 2022 article on "[The USA's Search and Rescue Hotspots](https://outforia.com/search-and-rescue-hotspots/)," was chosen. Within the article there are four tables consisting of the highest numbers of Search and Rescue (SAR) incidents grouped by either National Parks or States. [\[1\]] For this project, two of the four tables were chosen for a redesign.
 
 While the article is informative and helps readers understand which US National Parks could be considered most dangerous, the goal of this project was to enhance the visualization through best practices and improved graph design using R.
 
@@ -13,17 +13,17 @@ The article focuses on Search and Rescue incidents that occurred between 2018-20
 
 The first table provides the top 16 national parks with the highest number of incidents between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer. Another consideration is the unnecessary visual at the top of the table. Above the table are the three parks with the highest number of incidents. The only additional information provided are the states the parks reside in; however, this is easily overlooked based on their position, color, and pretty yet distracting pictures.
 
-[![NPS Most Search and Rescues by Outforia](images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="497"}](https://outforia.com/search-and-rescue-hotspots/)
+[![*NPS Most Search and Rescues by Outforia*](images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="497"}](https://outforia.com/search-and-rescue-hotspots/)
 
 The second table provides the top 20 US States with the most search and rescue incidents. *Yes, Virginia made the list.* In this table we have more information on total search and rescue incidents, but grouped by State instead of individual parks. This provides a holistic view of incidents across a given state. Again we are given a table, which doesn't offer fast comparison and the top three states which offer no additional information from the table but does offer a picture of the states' flags.
 
-[![States Most Search and Rescue by Outforia](images/States-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="594"}](https://outforia.com/search-and-rescue-hotspots/)
+[![*States Most Search and Rescue by Outforia*](images/States-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="594"}](https://outforia.com/search-and-rescue-hotspots/)
 
 ## About the data
 
 To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. In this redesign project, data from the article and tables were used.
 
-Additional information from National Park Services (NPS) site was used to supplement additional information. For example, adding state to the national parks data.
+Information from National Park Services (NPS) site was used to supplement additional information. [\[2\]] For example, adding state to the national parks data and adding coordinates to allow for plotting on the interactive map.
 
 ## Purpose of Redesign
 
@@ -31,7 +31,7 @@ The objectives of redesigning these tables are to provide informative graphs to 
 
 ### Redesign of Table 1
 
-In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still arranging the number of incidents from high to low. Also, this chart provides quick comparison for readers to easily compare bar lengths.
+In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still arranging the number of incidents from high to low. Also, this chart provides quick comparison for readers to easily compare bar lengths. In the book, *Storytelling with data*, "Our eyes compare the end points of the bars, so it is easy to see quickly which category is the biggest, which is the smallest, and also the incremental difference between categories." [\[3\]]
 
 ```{r}
 #| include: false
@@ -111,9 +111,11 @@ map1 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
 
 map1
 ```
+
 ### Redesign of Table 1, a better look
-Here is another way to visualize the information that blends location while still providing the number of Search and Rescue Incidents for the top parks.
-*Note: Sequoia National Park and Kings Canyon National Park were originally combined in the table. However, the NPS has them as separate parks.Therefore the number of incidents were divide between the two parks.
+
+Here is another way to visualize the information that blends location while still providing the number of Search and Rescue Incidents for the top parks. The use of an interactive map is to allow readers not only to understand the parks with the highest number of incidents, but to help explore where those parks are and how large they area. The interactive map allows the reader to zoom in and out and pan around the map. Each marker has the name of the Park and the number of incidents. \*Note: Sequoia National Park and Kings Canyon National Park were originally combined in the table. However, the NPS has them as separate parks.Therefore the number of incidents were divide between the two parks.
+
 ```{r}
 #| echo: false
 library(leaflet)
@@ -136,7 +138,6 @@ leaflet(filtered_npspoints)%>%
              label = ~paste0(UNIT_NAME,"; Incidents: ", NumberSARIncidents))
 
 ```
-
 
 ### Redesign of Table 2
 
@@ -166,7 +167,7 @@ mapSAR = ggplot(statesSARmap, aes(x = long, y = lat, group = group)) +
 mapSAR
 ```
 
-Here we must take another approach to the map view this time using library(usmap) and library(sf).
+Here we must take another approach to the map view this time using library(usmap) and library(sf). Initially, an unusual error occurred when trying to render from R Studio to html. The map was missing the data overlay. The map generated without issues in R Studio. For a workaround, I saved the ggplot as an image and included in the qmd. After revisiting this issue on the Redesign Code page, the issue was discovered in the variable name for the dataframe that was being used. After renaming the variable the issue was resolved.
 
 ```{r}
 #| label: map-plot
@@ -194,12 +195,18 @@ ggplot() +
 
 ```
 
-An unusual error occurred when trying to render from R Studio to Quarto. The above map is missing the data overlay. The map generated without issues in R Studio. Hence the workaround, saving the ggplot as an image and adding to the markup. After revisiting this issue on the Redesign Code page, the issue was discovered in the variable name for the dataframe that was being used in another process.
-
-![](RplotTop20.jpeg)
-
 Now we have all top 20 states properly represented on the map. To reduce clutter and unnecessary information the x-axis and y-axis were removed. This is not only good practice to reduce clutter but another consideration is the placement of Alaska, Hawaii, and Puerto Rico. They are placed here to include them in the graph not to represent their locations.
 
 ## References
 
-\[1\] Borg, C., 2022, “The USA’s Search And Rescue Hotspots,” Outforia. \[Online\]. Available: https://outforia.com/search-and-rescue-hotspots/
+##### \[1\]
+
+Borg, C., 2022, “The USA’s Search And Rescue Hotspots,” Outforia. \[Online\]. Available: https://outforia.com/search-and-rescue-hotspots/
+
+##### \[2\] {#section-1}
+
+2024, “NPS – Land Resources Division Boundary and Tract Data Service,” National Park Service. \[Online\]. Available: https://public-nps.opendata.arcgis.com/maps/c8d60ffcbf5c4030a17762fe10e81c6a/about
+
+##### \[3\]
+
+Knaflic, C. N., 2015. Storytelling with data: a data visualization guide for business professionals (1st ed.). Wiley.

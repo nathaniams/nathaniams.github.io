@@ -8,11 +8,11 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - Helpfulinfo.qmd
-      - Resources.qmd
+      - about.qmd 
       - Redesign.qmd
       - RedesignCode.qmd
+      - Helpfulinfo.qmd
+      - Resources.qmd
       
       
 format:

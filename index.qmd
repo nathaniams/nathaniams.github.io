@@ -4,10 +4,7 @@ title: "Nat's Site"
 
 ## Welcome to my site. 
 
-This is a work in progress, but here you will find information about me, helpful R code I've learned since starting my Graduate Program at GMU, some helpful links, and my Redesign Project.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
-```{r}
-1 + 1
-```
+This is a work in progress, but here you will find information about me, my redesign project, the redesign code, and helpful R code I've learned since starting my Graduate Program at GMU.
+
