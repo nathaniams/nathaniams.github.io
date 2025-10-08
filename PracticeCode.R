@@ -80,7 +80,10 @@ map1 = usamapsar%>% filter(!is.na(usamapsar$TotalbyState))
 map2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
   geom_polygon(aes(fill = TotalbyState), color = 'black') + 
   scale_fill_gradient(name = '# of Incidents', low = 'yellow',
-                      high = 'red', na.value = 'grey80')
+                      high = 'red', na.value = 'grey80'
+                      ) + 
+  coord_map() + 
+  labs(caption = '*Gray represents No data')
 
 map2
 
@@ -91,6 +94,80 @@ map2
 #    map = usa_tbl,
 #    color = "gray80", fill = "gray30", size = 0.3) +
 #  coord_cartesian()
+
+##--------------Redesign for Table 1-------------
+## coming back to this
+
+library(leaflet)
+library(tidyverse)
+
+leaflet() %>%
+  setView(lng = -98.15283557273337, lat = 38.91144189140998, zoom = 5) %>%
+  addProviderTiles(providers$Esri.WorldGrayCanvas)
+
+## ------------------Redesign for Table 2--------------------
+statesSAR = read.csv('StatesSAR.csv')
+
+# lower case states
+statesSAR$State = tolower(statesSAR$State)
+
+statesSARmap = left_join(usa_tbl, statesSAR, by = c('region' = 'State'))
+
+mapSAR = ggplot(statesSARmap, aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = NumberSARIncidents), color = 'black') +
+  scale_fill_gradient(name = '# of SAR Incidents', low = 'yellow',
+                      high = 'red', na.value = 'grey80') +
+  coord_map() +
+  labs(
+    title = "Top 20 States with the Most Search and Rescue Incidents",
+    x = '',
+    y = '',
+    caption = '*Gray represents no data') +
+  theme(plot.title = element_text(size = 20, hjust = -0.5))
+
+mapSAR
+
+
+###----Where's Alaska and Hawaii?
+library(dplyr)
+filteredUSA = namerica_tbl = map_data('world2') %>%
+  filter(region == 'USA') %>%
+  as_tibble()
+
+filteredUSA %>%
+  ggplot(aes(long, lat, map_id = region)) +
+  geom_map(
+    map = filteredUSA,
+    color = 'gray80', fill = 'gray30', size = 0.3) +
+  coord_map()
+
+install.packages("usmap")
+library(usmap)
+library(ggplot2)
+library(sf)
+
+
+usa = us_map() %>%
+  select(full, geom)
+plot(usa)
+
+# join the SAR data with the above
+usajoinsar = left_join(usa, statesSAR, by = c('full' = 'State'))
+
+plot(usajoinsar)
+
+mapwithalaska = ggplot() +
+  geom_sf(data=usajoinsar, aes(fill= NumberSARIncidents), color = 'gray70') +
+  scale_fill_gradient(name = '# of SAR Incidents', low = 'yellow', high = 'red', na.value = 'grey30') +
+  labs(title = "Top 20 States", 
+       subtitle = "with the Most Search and Rescue Incidents",
+       caption = c('Gray represents no data')) +
+  theme_void() +
+  theme(title = element_text(face = 'bold'),
+        legend.position = 'bottom')
+
+mapwithalaska
+
 
 
 
