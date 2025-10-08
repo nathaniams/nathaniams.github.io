@@ -129,7 +129,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#purpose-of-redesign" id="toc-purpose-of-redesign" class="nav-link" data-scroll-target="#purpose-of-redesign">Purpose of Redesign</a>
   <ul>
   <li><a href="#redesign-of-table-1" id="toc-redesign-of-table-1" class="nav-link" data-scroll-target="#redesign-of-table-1">Redesign of Table 1</a></li>
-  <li><a href="#redesign-of-table-1-1" id="toc-redesign-of-table-1-1" class="nav-link" data-scroll-target="#redesign-of-table-1-1">Redesign of Table 1</a></li>
+  <li><a href="#redesign-of-table-1-another-look" id="toc-redesign-of-table-1-another-look" class="nav-link" data-scroll-target="#redesign-of-table-1-another-look">Redesign of Table 1, another look</a></li>
   <li><a href="#redesign-of-table-2" id="toc-redesign-of-table-2" class="nav-link" data-scroll-target="#redesign-of-table-2">Redesign of Table 2</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -164,8 +164,10 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="the-original-design" class="level2">
 <h2 class="anchored" data-anchor-id="the-original-design">The Original Design</h2>
-<p>For this project, an Outforia 2022 article on “<a href="https://outforia.com/search-and-rescue-hotspots/">The USA’s Search and Rescue Hotspots</a>,” was chosen. Within the article are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. The information is informative and helps readers quickly understand which US National Parks could be considered most dangerous based on the number of Search and Rescue incidents that occurred between 2018-2020. Considering the context of this article and the author’s statement found at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of nature. It is also likely that the article is intended to help novice outdoor adventurers, providing insight into the highest number of search and rescue events.</p>
-<p>The first table provides the top 16 search and rescue incidents based on Number of incidents for a particular National Park between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer.</p>
+<p>For this project, an Outforia 2022 article on “<a href="https://outforia.com/search-and-rescue-hotspots/">The USA’s Search and Rescue Hotspots</a>,” was chosen. Within the article there are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. For this project, two of the four tables were chosen for a redesign.</p>
+<p>While the article is informative and helps readers understand which US National Parks could be considered most dangerous, the goal of this project was to enhance the visualization through best practices and improved graph design using R.</p>
+<p>The article focuses on Search and Rescue incidents that occurred between 2018-2020 within US National Parks. Considering the context and the author’s statement at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of national parks. It is also likely that the article is intended to help novice outdoor adventurers by providing awareness into the highest number of search and rescue events.This helps readers make informed decisions regarding their next outdoor adventure!</p>
+<p>The first table provides the top 16 national parks with the highest number of incidents between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer. Another consideration is the unnecessary visual at the top of the table. Above the table are the three parks with the highest number of incidents. The only additional information provided are the states the parks reside in; however, this is easily overlooked based on their position, color, and pretty yet distracting pictures.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <div class="quarto-figure quarto-figure-center">
@@ -176,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
 <figcaption>NPS Most Search and Rescues by Outforia</figcaption>
 </figure>
 </div>
-<p>The second table provides the top 20 US States with the most search and rescue incidents. <em>Yes, Virginia made the list.</em> In this table we have more information on total search and rescue incidents, but grouped by State instead of individual parks. This provides a holistic view of incidents across a given state.</p>
+<p>The second table provides the top 20 US States with the most search and rescue incidents. <em>Yes, Virginia made the list.</em> In this table we have more information on total search and rescue incidents, but grouped by State instead of individual parks. This provides a holistic view of incidents across a given state. Again we are given a table, which doesn’t offer fast comparison and the top three states which offer no additional information from the table but does offer a picture of the states’ flags.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <div class="quarto-figure quarto-figure-center">
@@ -190,15 +192,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="about-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="about-the-data">About the data</h2>
-<p>To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In this project, data from the article and tables were used. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state.</p>
+<p>To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. In this redesign project, data from the article and tables were used.</p>
 <p>Additional information from National Park Services (NPS) site was used to supplement additional information. For example, adding state to the national parks data.</p>
 </section>
 <section id="purpose-of-redesign" class="level2">
 <h2 class="anchored" data-anchor-id="purpose-of-redesign">Purpose of Redesign</h2>
-<p>The objective of the redesign of these tables is to provide informative graphs to help readers further interpret the data. Hopefully helping readers make informed decisions about their next visit to a National Park. To ensure proper redesign, the graphs will focus on providing accurate comparisons, simplified and clear graphs, provide appropriate context when needed, and engage readers.</p>
+<p>The objectives of redesigning these tables are to provide informative graphs to help readers further interpret the data. By ensuring the graphs focus on accurate comparisons, simplified and uncluttered graphs, and appropriate context to keep the readers engaged. This will help readers make informed decisions about their next visit to a National Park.</p>
 <section id="redesign-of-table-1" class="level3">
 <h3 class="anchored" data-anchor-id="redesign-of-table-1">Redesign of Table 1</h3>
-<p>In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still ordering the number of incidents from high to low. This chart also provides quick comparison of the bar sizes.</p>
+<p>In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still arranging the number of incidents from high to low. Also, this chart provides quick comparison for readers to easily compare bar lengths.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -209,8 +211,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="redesign-of-table-1-1" class="level3">
-<h3 class="anchored" data-anchor-id="redesign-of-table-1-1">Redesign of Table 1</h3>
+<section id="redesign-of-table-1-another-look" class="level3">
+<h3 class="anchored" data-anchor-id="redesign-of-table-1-another-look">Redesign of Table 1, another look</h3>
 <p>In this redesign, table 1 is transformed to provide a map view of the data. This takes a different approach to understanding the search and rescue incidents from table 1. Here we are still using the same data from table 1, but instead of representing the park the state is used instead to represent states with the most incidents. This is another way to visualize the information from table 1, although not complete. Another consideration is that some National Parks span more than one state. In this map, only one state was selected for each National Park. If data was available for each of the search and rescue events, then we could plot those events and have a more exact number of what state the incidents occurred in.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -224,7 +226,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="redesign-of-table-2" class="level3">
 <h3 class="anchored" data-anchor-id="redesign-of-table-2">Redesign of Table 2</h3>
-<p>In table 2 we see more states with the total number of Search and Rescue incidents from 2018-2020.</p>
+<p>In table 2 we see more states with the total number of Search and Rescue incidents from 2018-2020. Here it seems like the visual is on the right track; however, after counting the states there are only 19! Oh yes, sneaky Alaska and Hawaii are not in the picture.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -234,39 +236,19 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Here it seems like the visual is on the right track; however, after counting the states there are only 19! Oh yes, sneaky Alaska and Hawaii are not in the picture. Here we must take another approach to the map view this time using library(usmap) and library(sf).</p>
+<p>Here we must take another approach to the map view this time using library(usmap) and library(sf).</p>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Linking to GEOS 3.13.1, GDAL 3.11.0, PROJ 9.6.0; sf_use_s2() is TRUE</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Redesign_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Redesign_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Redesign_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Redesign_files/figure-html/map-plot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>An unusual error occurred when trying to render from R Studio to Quarto. The above map is missing the data overlay. The map generated without issues in R Studio. Hence the workaround, saving the ggplot as an image and adding to the markup.</p>
+<p><img src="RplotTop20.jpeg" class="img-fluid"></p>
+<p>Now we have all top 20 states properly represented on the map. To reduce clutter and unnecessary information the x-axis and y-axis were removed. This is not only good practice to reduce clutter but another consideration is the placement of Alaska, Hawaii, and Puerto Rico. They are placed here to include them in the graph not to represent their locations.</p>
 </section>
 </section>
 <section id="references" class="level2">
