@@ -96,10 +96,7 @@ sarbystate = nps_sar %>%
 # Join the state map with the sar table
 usamapsar = left_join(usa_tbl, sarbystate, by = c('region' = 'State1'))
 
-# only get states with numbers
-map1 = usamapsar%>% filter(!is.na(usamapsar$TotalbyState))
-
-map2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
+map1 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
   geom_polygon(aes(fill = TotalbyState), color = 'black') + 
   scale_fill_gradient(name = '# of Incidents', low = 'yellow',
                       high = 'red', na.value = 'grey80') + 
@@ -112,10 +109,11 @@ map2 = ggplot(usamapsar, aes( x = long, y =lat, group= group)) +
     caption = '*Gray states contain no data') + 
   theme(plot.title = element_text(size = 20))
 
-map2
+map1
 ```
 ### Redesign of Table 1, a better look
 Here is another way to visualize the information that blends location while still providing the number of Search and Rescue Incidents for the top parks.
+*Note: Sequoia National Park and Kings Canyon National Park were originally combined in the table. However, the NPS has them as separate parks.Therefore the number of incidents were divide between the two parks.
 ```{r}
 #| echo: false
 library(leaflet)
@@ -171,15 +169,6 @@ mapSAR
 Here we must take another approach to the map view this time using library(usmap) and library(sf).
 
 ```{r}
-#| include: false
-# Use us_map to get all states but only take full and geom columns
-library(usmap)
-usa = us_map('states')
-usa_sub = usa[, c("full", "geom")]
-usajoinsar = left_join(usa_sub, statesSAR, by = c('full' = 'State'))
-```
-
-```{r}
 #| label: map-plot
 #| echo: false
 #| message: false
@@ -187,6 +176,11 @@ library(usmap)
 library(ggplot2)
 library(sf)
 library(dplyr)
+
+SARstates = read.csv('StatesSAR.csv')
+usa = us_map('states')
+usa_sub = usa[, c("full", "geom")]
+usajoinsar = left_join(usa_sub, SARstates, by = c('full' = 'State'))
 
 ggplot() +
   geom_sf(data=usajoinsar, aes(fill= NumberSARIncidents), color = 'gray70') +
@@ -200,7 +194,7 @@ ggplot() +
 
 ```
 
-An unusual error occurred when trying to render from R Studio to Quarto. The above map is missing the data overlay. The map generated without issues in R Studio. Hence the workaround, saving the ggplot as an image and adding to the markup.
+An unusual error occurred when trying to render from R Studio to Quarto. The above map is missing the data overlay. The map generated without issues in R Studio. Hence the workaround, saving the ggplot as an image and adding to the markup. After revisiting this issue on the Redesign Code page, the issue was discovered in the variable name for the dataframe that was being used in another process.
 
 ![](RplotTop20.jpeg)
 
