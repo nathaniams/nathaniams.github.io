@@ -118,20 +118,20 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">About Me</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Helpfulinfo.html"> 
-<span class="menu-text">Helpful R Info</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./Resources.html"> 
-<span class="menu-text">Helpful Links</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link active" href="./Redesign.html" aria-current="page"> 
 <span class="menu-text">Redesign Project</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./RedesignCode.html"> 
 <span class="menu-text">Redesign Code</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Helpfulinfo.html"> 
+<span class="menu-text">Helpful R Info</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Resources.html"> 
+<span class="menu-text">Helpful Links</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -189,7 +189,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="the-original-design" class="level2">
 <h2 class="anchored" data-anchor-id="the-original-design">The Original Design</h2>
-<p>For this project, an Outforia 2022 article on “<a href="https://outforia.com/search-and-rescue-hotspots/">The USA’s Search and Rescue Hotspots</a>,” was chosen. Within the article there are four tables consisting of either National Parks or States, and their corresponding counts for search and Rescues (SAR) incidents. For this project, two of the four tables were chosen for a redesign.</p>
+<p>For this project, an Outforia 2022 article on “<a href="https://outforia.com/search-and-rescue-hotspots/">The USA’s Search and Rescue Hotspots</a>,” was chosen. Within the article there are four tables consisting of the highest numbers of Search and Rescue (SAR) incidents grouped by either National Parks or States. <a href="#section">[1]</a> For this project, two of the four tables were chosen for a redesign.</p>
 <p>While the article is informative and helps readers understand which US National Parks could be considered most dangerous, the goal of this project was to enhance the visualization through best practices and improved graph design using R.</p>
 <p>The article focuses on Search and Rescue incidents that occurred between 2018-2020 within US National Parks. Considering the context and the author’s statement at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of national parks. It is also likely that the article is intended to help novice outdoor adventurers by providing awareness into the highest number of search and rescue events.This helps readers make informed decisions regarding their next outdoor adventure!</p>
 <p>The first table provides the top 16 national parks with the highest number of incidents between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer. Another consideration is the unnecessary visual at the top of the table. Above the table are the three parks with the highest number of incidents. The only additional information provided are the states the parks reside in; however, this is easily overlooked based on their position, color, and pretty yet distracting pictures.</p>
@@ -200,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="https://outforia.com/search-and-rescue-hotspots/"><img src="images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="497"></a></p>
 </figure>
 </div>
-<figcaption>NPS Most Search and Rescues by Outforia</figcaption>
+<figcaption><em>NPS Most Search and Rescues by Outforia</em></figcaption>
 </figure>
 </div>
 <p>The second table provides the top 20 US States with the most search and rescue incidents. <em>Yes, Virginia made the list.</em> In this table we have more information on total search and rescue incidents, but grouped by State instead of individual parks. This provides a holistic view of incidents across a given state. Again we are given a table, which doesn’t offer fast comparison and the top three states which offer no additional information from the table but does offer a picture of the states’ flags.</p>
@@ -211,21 +211,21 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="https://outforia.com/search-and-rescue-hotspots/"><img src="images/States-most-search-and-rescue-incidents-infographics-122121.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="594"></a></p>
 </figure>
 </div>
-<figcaption>States Most Search and Rescue by Outforia</figcaption>
+<figcaption><em>States Most Search and Rescue by Outforia</em></figcaption>
 </figure>
 </div>
 </section>
 <section id="about-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="about-the-data">About the data</h2>
 <p>To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. In this redesign project, data from the article and tables were used.</p>
-<p>Additional information from National Park Services (NPS) site was used to supplement additional information. For example, adding state to the national parks data.</p>
+<p>Information from National Park Services (NPS) site was used to supplement additional information. <a href="#section-1">[2]</a> For example, adding state to the national parks data and adding coordinates to allow for plotting on the interactive map.</p>
 </section>
 <section id="purpose-of-redesign" class="level2">
 <h2 class="anchored" data-anchor-id="purpose-of-redesign">Purpose of Redesign</h2>
 <p>The objectives of redesigning these tables are to provide informative graphs to help readers further interpret the data. By ensuring the graphs focus on accurate comparisons, simplified and uncluttered graphs, and appropriate context to keep the readers engaged. This will help readers make informed decisions about their next visit to a National Park.</p>
 <section id="redesign-of-table-1" class="level3">
 <h3 class="anchored" data-anchor-id="redesign-of-table-1">Redesign of Table 1</h3>
-<p>In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still arranging the number of incidents from high to low. Also, this chart provides quick comparison for readers to easily compare bar lengths.</p>
+<p>In this redesign, a horizontal bar chart is used. This allows for easy reading of the park names while still arranging the number of incidents from high to low. Also, this chart provides quick comparison for readers to easily compare bar lengths. In the book, <em>Storytelling with data</em>, “Our eyes compare the end points of the bars, so it is easy to see quickly which category is the biggest, which is the smallest, and also the incremental difference between categories.” <a href="#section-2">[3]</a></p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -251,11 +251,11 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="redesign-of-table-1-a-better-look" class="level3">
 <h3 class="anchored" data-anchor-id="redesign-of-table-1-a-better-look">Redesign of Table 1, a better look</h3>
-<p>Here is another way to visualize the information that blends location while still providing the number of Search and Rescue Incidents for the top parks. *Note: Sequoia National Park and Kings Canyon National Park were originally combined in the table. However, the NPS has them as separate parks.Therefore the number of incidents were divide between the two parks.</p>
+<p>Here is another way to visualize the information that blends location while still providing the number of Search and Rescue Incidents for the top parks. The use of an interactive map is to allow readers not only to understand the parks with the highest number of incidents, but to help explore where those parks are and how large they area. The interactive map allows the reader to zoom in and out and pan around the map. Each marker has the name of the Park and the number of incidents. *Note: Sequoia National Park and Kings Canyon National Park were originally combined in the table. However, the NPS has them as separate parks.Therefore the number of incidents were divide between the two parks.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-5427b860f67f1bf6a649" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-5427b860f67f1bf6a649">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[38.47242981,38.70792359,48.61885639,37.39802645,43.82629944,40.35734318,37.27952483,43.73100119,44.58303878,35.62215504,36.04003077,36.30988425,36.49636864,36.87494725,37.84128363,46.85465295,47.7867324],[-78.46395182000001,-109.595467,-113.7562826,-110.8021386,-110.6855868,-105.703659,-113.0457281,-103.8316336,-110.4900951,-83.49809989000001,-93.30985962,-112.2996985,-118.5603889,-118.5938531,-119.5428407,-121.7064438,-123.5342588],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Shenandoah National Park; Incidents: 131","Arches National Park; Incidents: 202","Glacier National Park; Incidents: 165","Glen Canyon National Recreation Area; Incidents: 279","Grand Teton National Park; Incidents: 224","Rocky Mountain National Park; Incidents: 341","Zion National Park; Incidents: 285","Jewel Cave National Monument; Incidents: 133","Yellowstone National Park; Incidents: 371","Great Smoky Mountains National Park; Incidents: 198","Buffalo National River; Incidents: 131","Grand Canyon National Park; Incidents: 785","Sequoia National Park; Incidents: 300","Kings Canyon National Park; Incidents: 203","Yosemite National Park; Incidents: 732","Mount Rainier National Park; Incidents: 146","Olympic National Park; Incidents: 204"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[35.62215504,48.61885639],"lng":[-123.5342588,-78.46395182000001]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-53dd970a3b3e84536cb3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-53dd970a3b3e84536cb3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[38.47242981,38.70792359,48.61885639,37.39802645,43.82629944,40.35734318,37.27952483,43.73100119,44.58303878,35.62215504,36.04003077,36.30988425,36.49636864,36.87494725,37.84128363,46.85465295,47.7867324],[-78.46395182000001,-109.595467,-113.7562826,-110.8021386,-110.6855868,-105.703659,-113.0457281,-103.8316336,-110.4900951,-83.49809989000001,-93.30985962,-112.2996985,-118.5603889,-118.5938531,-119.5428407,-121.7064438,-123.5342588],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["Shenandoah National Park; Incidents: 131","Arches National Park; Incidents: 202","Glacier National Park; Incidents: 165","Glen Canyon National Recreation Area; Incidents: 279","Grand Teton National Park; Incidents: 224","Rocky Mountain National Park; Incidents: 341","Zion National Park; Incidents: 285","Jewel Cave National Monument; Incidents: 133","Yellowstone National Park; Incidents: 371","Great Smoky Mountains National Park; Incidents: 198","Buffalo National River; Incidents: 131","Grand Canyon National Park; Incidents: 785","Sequoia National Park; Incidents: 300","Kings Canyon National Park; Incidents: 203","Yosemite National Park; Incidents: 732","Mount Rainier National Park; Incidents: 146","Olympic National Park; Incidents: 204"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[35.62215504,48.61885639],"lng":[-123.5342588,-78.46395182000001]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -271,7 +271,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Here we must take another approach to the map view this time using library(usmap) and library(sf).</p>
+<p>Here we must take another approach to the map view this time using library(usmap) and library(sf). Initially, an unusual error occurred when trying to render from R Studio to html. The map was missing the data overlay. The map generated without issues in R Studio. For a workaround, I saved the ggplot as an image and included in the qmd. After revisiting this issue on the Redesign Code page, the issue was discovered in the variable name for the dataframe that was being used. After renaming the variable the issue was resolved.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -281,16 +281,25 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>An unusual error occurred when trying to render from R Studio to Quarto. The above map is missing the data overlay. The map generated without issues in R Studio. Hence the workaround, saving the ggplot as an image and adding to the markup.</p>
-<p><img src="RplotTop20.jpeg" class="img-fluid"></p>
 <p>Now we have all top 20 states properly represented on the map. To reduce clutter and unnecessary information the x-axis and y-axis were removed. This is not only good practice to reduce clutter but another consideration is the placement of Alaska, Hawaii, and Puerto Rico. They are placed here to include them in the graph not to represent their locations.</p>
 </section>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
-<p>[1] Borg, C., 2022, “The USA’s Search And Rescue Hotspots,” Outforia. [Online]. Available: https://outforia.com/search-and-rescue-hotspots/</p>
+<section id="section" class="level5">
+<h5 class="anchored" data-anchor-id="section">[1]</h5>
+<p>Borg, C., 2022, “The USA’s Search And Rescue Hotspots,” Outforia. [Online]. Available: https://outforia.com/search-and-rescue-hotspots/</p>
+</section>
+<section id="section-1" class="level5">
+<h5 class="anchored" data-anchor-id="section-1">[2]</h5>
+<p>2024, “NPS – Land Resources Division Boundary and Tract Data Service,” National Park Service. [Online]. Available: https://public-nps.opendata.arcgis.com/maps/c8d60ffcbf5c4030a17762fe10e81c6a/about</p>
+</section>
+<section id="section-2" class="level5">
+<h5 class="anchored" data-anchor-id="section-2">[3]</h5>
+<p>Knaflic, C. N., 2015. Storytelling with data: a data visualization guide for business professionals (1st ed.). Wiley.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
