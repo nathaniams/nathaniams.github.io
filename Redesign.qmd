@@ -7,21 +7,21 @@ editor: visual
 
 For this project, an Outforia 2022 article on "[The USA's Search and Rescue Hotspots](https://outforia.com/search-and-rescue-hotspots/)," was chosen. Within the article there are four tables consisting of the highest numbers of Search and Rescue (SAR) incidents grouped by either National Parks or States. [\[1\]](#section) For this project, two of the four tables were chosen for a redesign.
 
-While the article is informative and helps readers understand which US National Parks could be considered most dangerous, the goal of this project was to enhance the visualization through best practices and improved graph design using R.
-
 The article focuses on Search and Rescue incidents that occurred between 2018-2020 within US National Parks. Considering the context and the author's statement at the bottom of the article, this article and tables were likely created for readers who enjoy the outdoors, hiking, exploring and soaking in the beauty of national parks. It is also likely that the article is intended to help novice outdoor adventurers by providing awareness into the highest number of search and rescue events.This helps readers make informed decisions regarding their next outdoor adventure!
+
+While the article is informative and helps readers understand which US National Parks could be considered most dangerous, the goal of this project was to enhance the visualization through best practices and improved graph design using R.
 
 The first table provides the top 16 national parks with the highest number of incidents between 2018-2020. Some of the disadvantages of this table is that it is a table, while simple and easy to read, it does not provide quick comparison like a bar chart would offer. Another consideration is the unnecessary visual at the top of the table. Above the table are the three parks with the highest number of incidents. The only additional information provided are the states the parks reside in; however, this is easily overlooked based on their position, color, and pretty yet distracting pictures.
 
 [![NPS Most Search and Rescues by Outforia](images/Nps-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="497"}](https://outforia.com/search-and-rescue-hotspots/)
 
-The second table provides the top 20 US States with the most search and rescue incidents. *Yes, Virginia made the list.* In this table we have more information on total search and rescue incidents, but grouped by State instead of individual parks. This provides a holistic view of incidents across a given state. Again we are given a table, which doesn't offer fast comparison and the top three states which offer no additional information from the table but does offer a picture of the states' flags.
+The second table provides the top 20 US States with the most search and rescue incidents. *Yes, Virginia made the list.* In this table we have more information on total search and rescue incidents, but grouped by State instead of individual parks. This provides a holistic view of incidents across a given state. Again we are given a table, which doesn't offer fast comparison and the top three states which offer no additional information from the table but does offer pictures of the states' flags and an outline of the state.
 
 [![States Most Search and Rescue by Outforia](images/States-most-search-and-rescue-incidents-infographics-122121.jpg){fig-align="center" width="594"}](https://outforia.com/search-and-rescue-hotspots/)
 
 ## About the data
 
-To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. In this redesign project, data from the article and tables were used.
+To obtain the data Outforia submitted a freedom of information request to the National Park Authority for search and rescue incidents between 2018-2020 for all US national parks. In cases where national parks spanned more than one state, Outforia counted the number of incidents for each state. [\[1\]] In this redesign project, data from the tables were used.
 
 Information from National Park Services (NPS) site was used to supplement additional information. [\[2\]](#section-1) For example, adding state to the national parks data and adding coordinates to allow for plotting on the interactive map.
 
@@ -76,7 +76,7 @@ ggplot(nps_sar, aes(x = reorder(NationalPark, NumberSARIncidents), y = NumberSAR
 
 ### Redesign of Table 1, another look
 
-In this redesign, table 1 is transformed to provide a map view of the data. This takes a different approach to understanding the search and rescue incidents from table 1. Here we are still using the same data from table 1, but instead of representing the park the state is used instead to represent states with the most incidents. This is another way to visualize the information from table 1, although not complete. Another consideration is that some National Parks span more than one state. In this map, only one state was selected for each National Park. If data was available for each of the search and rescue events, then we could plot those events and have a more exact number of what state the incidents occurred in.
+In this redesign, table 1 is transformed to provide a map view of the data. This takes a different approach to understanding the search and rescue incidents from table 1. Here we are still using the same data from table 1, but instead of representing the park the state is used instead to represent states with the most incidents. This is another way to visualize the information from table 1. Another consideration is that some National Parks span more than one state. In this map, only one state was selected for each National Park. If data was available for each of the search and rescue events, then we could plot those events and have a more exact number of what state the incidents occurred in.
 
 ```{r}
 #| echo: false
@@ -141,7 +141,7 @@ leaflet(filtered_npspoints)%>%
 
 ### Redesign of Table 2
 
-In table 2 we see more states with the total number of Search and Rescue incidents from 2018-2020. Here it seems like the visual is on the right track; however, after counting the states there are only 19! Oh yes, sneaky Alaska and Hawaii are not in the picture.
+In table 2 we see 20 states listed with the total number of Search and Rescue incidents from 2018-2020. Here it seems like the visual is on the right track; however, after counting the states there are only 19 highlighted! Oh yes, sneaky Alaska and Hawaii are not represented in this map.
 
 ```{r}
 #| echo: false
@@ -167,7 +167,7 @@ mapSAR = ggplot(statesSARmap, aes(x = long, y = lat, group = group)) +
 mapSAR
 ```
 
-Here we must take another approach to the map view this time using library(usmap) and library(sf). Initially, an unusual error occurred when trying to render from R Studio to html. The map was missing the data overlay. The map generated without issues in R Studio. For a workaround, I saved the ggplot as an image and included in the qmd. After revisiting this issue on the Redesign Code page, the issue was discovered in the variable name for the dataframe that was being used. After renaming the variable the issue was resolved.
+In order to get the two states in the chart, without zooming too far out and losing the state-level resolution, another approach to the map view must be taken using library(usmap) and library(sf). Now we have all top 20 states properly represented on the map. To reduce clutter and unnecessary information [\[3\]], the x-axis and y-axis were removed. This is not only good practice to reduce clutter but another consideration is the placement of Alaska, Hawaii, and Puerto Rico. They are placed toward the bottom of the map view to include them in the graph not to represent their actual locations. 
 
 ```{r}
 #| label: map-plot
@@ -187,7 +187,7 @@ ggplot() +
   geom_sf(data=usajoinsar, aes(fill= NumberSARIncidents), color = 'gray70') +
   scale_fill_gradient(name = '# of SAR Incidents', low = 'yellow', high = 'red', na.value = 'grey30') +
   labs(title = "Top 20 States", 
-       subtitle = "with the Most Search and Rescue Incidents",
+       subtitle = "with the Most Search and Rescue (SAR) Incidents",
        caption = c('Gray represents no data')) +
   theme_void() +
   theme(title = element_text(face = 'bold'),
@@ -195,7 +195,8 @@ ggplot() +
 
 ```
 
-Now we have all top 20 states properly represented on the map. To reduce clutter and unnecessary information the x-axis and y-axis were removed. This is not only good practice to reduce clutter but another consideration is the placement of Alaska, Hawaii, and Puerto Rico. They are placed here to include them in the graph not to represent their locations.
+Initially, an unusual error occurred when trying to render from R Studio to html. The map was missing the data overlay. The map generated without issues in R Studio. For a workaround, I saved the ggplot as an image and included in the qmd. After revisiting this issue on the Redesign Code page, the issue was discovered in the variable name for the dataframe that was being used. After renaming the variable the issue was resolved.
+
 
 ## Video Presentation
 This is a test.
