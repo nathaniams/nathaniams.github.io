@@ -8,7 +8,9 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd 
+      - about.qmd
+      - FinalProject.qmd
+      - FinalProjectCode.qmd
       - Redesign.qmd
       - RedesignCode.qmd
       - Helpfulinfo.qmd
