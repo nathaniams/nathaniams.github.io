@@ -354,6 +354,6 @@
     "href": "FinalProject.html#exploratory-analysis",
     "title": "Final Project",
     "section": "Exploratory Analysis",
-    "text": "Exploratory Analysis\nMapping the arrest data for a geospatial visual of where arrest occur.\n\n\nReading layer `Supervisor_Districts' from data source \n  `C:\\Users\\Nat\\OneDrive - George Mason University - O365 Production\\Git\\nathaniams.github.io\\Supervisor_Districts\\Supervisor_Districts.shp' \n  using driver `ESRI Shapefile'\nSimple feature collection with 9 features and 12 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 11757190 ymin: 6905421 xmax: 11899000 ymax: 7070364\nProjected CRS: NAD83 / Virginia North (ftUS)"
+    "text": "Exploratory Analysis\nMapping the arrest data for a geospatial visual of where arrest occur.\n\n\n\n\n\n\nNext we look at the top 10 arrest type by Incident Based Reporting (IBR) codes."
   }
 ]

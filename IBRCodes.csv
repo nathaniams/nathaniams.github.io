@@ -1,0 +1,33 @@
+﻿OFFENSE ,CRIME AGAINST: ,CODE
+Arson,Property,200
+Assault - Aggravated Assault,Person,13A
+Assualt - Simple Assault,Person,13B
+Assualt - Intimidation,Person,13C
+Bribery,Property,510
+Burglary/Breaking & Entering,Property,220
+Counterfeiting/Forgery,Property,250
+Destruction/Damage/Vandalism of Property,Property ,290
+Drug/Narcotic Violations,Society,35A
+Drug Equipment Violations,Society,35B
+Embezzlement,Property,270
+Extortion/Blackmail,Property,210
+Fraud - False Pretenses/Swindle/Confidence Game,Property,26A
+Fraud - Credit Card/Automatic Teller/Machine Fraud,Property,26B
+Fraud - Impersonation ,Property,26C
+Fraud -Welfare Fraud ,Property,26D
+Fraud -Wire Fraud ,Property,26E
+Gambling - Betting/Wagering,Society,39A
+Gambling - Operating/Promoting/Assisting Gambling,Society,39B
+Gambling - Gambling Equipment Violations,Society ,39C
+Gambling - Sports Tampering,Society ,39D
+Murder & Nonnegligent Manslaughter,Person,09A
+Negligent Manslaughter,Person,09B
+Justifiable Homicide,Not a Crime,09C
+Kidnapping/Abduction,Person,100
+All Other Larceny,Property,23H
+All Other (Traffic),,999
+All Other Offenses (Except Traffic),,90Z
+All Other Larceny,Property,23H
+Drunkenness,,90E
+Driving Under the Influence,,90D
+Trespass of Real Property,,90J
