@@ -1,0 +1,42 @@
+---
+title: "FinalProject"
+editor: visual
+---
+
+## Group 1:
+
+-   Nathania Stephens
+
+-   Hiba Awan
+
+# [Abstract]{.underline}
+
+# [Introduction & Background]{.underline}
+
+## Motivation/ Purpose
+
+## Goals/ Objectives
+
+# [Data]{.underline}
+
+## Overview
+
+## About the Data
+
+## Limitations and Assumptions
+
+## Cleaning and Transformation
+
+## Exploratory Analysis
+
+# [Research Questions]{.underline}
+
+1)  
+
+2)  
+
+3)  
+
+# [Conclusion]{.underline}
+
+# [References]{.underline}
