@@ -4,7 +4,5 @@ title: "Nat's Site"
 
 ## Welcome to my site. 
 
-
-
 This is a work in progress, but here you will find information about me, my redesign project, the redesign code, and helpful R code I've learned since starting my Graduate Program at GMU.
 
