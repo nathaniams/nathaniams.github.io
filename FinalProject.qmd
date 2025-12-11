@@ -31,6 +31,7 @@ editor: visual
 Mapping the arrest data for a geospatial visual of where arrest occur.
 ```{r}
 #| echo: false
+#| warning: false
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
