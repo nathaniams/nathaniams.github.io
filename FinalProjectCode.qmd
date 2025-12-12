@@ -2,3 +2,248 @@
 title: "Final Project Code"
 editor: visual
 ---
+
+Final Project Code...
+```{r}
+#| warning: false
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(leaflet)
+library(usmap)
+library(sf)
+library(readr)
+library(scales)
+library(tidyr)
+
+Arrest2023 <- read_csv("2023_arrest_data.csv", 
+                       col_types = cols(ArresteeNumber = col_skip(), 
+                                        ArrestDate = col_date(format = "%m/%d/%Y"), 
+                                        ArrestTime = col_character(), WEB_ADDRESS = col_skip(), 
+                                        PHONE_NUMBER = col_skip(), NAME = col_skip()))
+
+## Remove any outliers by setting min/max lat and long.
+min_lat = 38.6
+max_lat = 39.0
+min_lon = -77.6
+max_lon = -77.0
+
+## Using all data but excluding any coordinates that are not within coordinates
+arrest_data_clean = Arrest2023 %>%
+  filter(
+    Latitude >= min_lat,
+    Latitude <= max_lat,
+    Longitude >= min_lon,
+    Longitude <= max_lon
+  )
+
+## Include district boundaries by reading in shape file downloaded from Fairfax County site
+district_boundaries = st_read("Supervisor_Districts/Supervisor_Districts.shp")
+
+## Transform to WGS84 projection to match basemap within leaflet
+if (st_crs(district_boundaries)$epsg != 4326) {
+  district_boundaries = st_transform(district_boundaries, 4326)
+}
+```
+
+```{r}
+#| warning: false
+## Using leaflet to map the Arrest data and include district layers
+leaflet() %>%
+  addProviderTiles(providers$OpenStreetMap) %>%
+  addPolygons(
+    data = district_boundaries,
+    fillOpacity = 0.5,
+    color = "black",
+    weight = 1,
+    popup = ~paste("District:", DISTRICT)
+  ) %>%
+  addCircleMarkers(
+    data = arrest_data_clean,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    radius = 3,
+    color = "darkred",
+    stroke = FALSE,
+    fillOpacity = 0.4,
+    popup = ~paste(
+      "Case Number: ", CaseNumber, "<br>",
+      "Arrest Type: ", IBRDescription)
+  )
+```
+
+```{r}
+# By IBRCode
+arrest_count = Arrest2023 %>%
+  group_by(IBRCode) %>%
+  summarise(Count = n()) %>%
+  ungroup() %>%
+  arrange(desc(Count))
+
+# Get top 10
+top_10_arrest_IBR = head(arrest_count, 10)
+
+# Add codes - General Description
+IBRCodeDetails = read.csv("IBRcodes.csv")
+
+# Reassign the codes
+top_10_arrest_decoded = top_10_arrest_IBR %>%
+  left_join(IBRCodeDetails, by = c("IBRCode" = "CODE")) %>%
+  select(IBRCode, OFFENSE, everything())
+
+top_10_arrest_cleaned = top_10_arrest_decoded %>%
+  distinct(IBRCode, OFFENSE, .keep_all = TRUE)
+
+# Decode for cleaner results
+arrest_chart = ggplot(top_10_arrest_cleaned, aes(x = reorder(OFFENSE, Count),
+                                              y = Count)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  coord_flip() +
+  labs(title = "Top 10 Arrest Type by IBR decoded",
+       x = "Offense by IBR Code",
+       y = "Number of Arrests") +
+  theme_grey() +
+  geom_text(aes(label = Count), hjust = -0.1, size = 3.5) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+
+arrest_chart
+```
+
+```{r}
+library(readr)
+library(lubridate)
+
+warnings = read_csv("2023_warning_data.csv", 
+                         col_types = cols(Warnings_Date = col_date(format = "%m/%d/%Y"), 
+                                          WEB_ADDRESS = col_skip(), PHONE_NUMBER = col_skip(), 
+                                          NAME = col_skip()))
+
+citations = read_csv("2023_citation_data.csv", 
+                                col_types = cols(Date = col_date(format = "%m/%d/%Y"), 
+                                                 WEB_ADDRESS = col_skip(), PHONE_NUMBER = col_skip(), 
+                                                 NAME = col_skip()))
+
+# Rename some columns
+citations = citations %>%
+  rename(ViolationDate = Date)
+
+# change Gender to sex in warnings and change date column name
+warnings = warnings %>%
+  rename(Sex = Gender)
+
+warnings = warnings %>%
+  rename(ViolationDate = Warnings_Date)
+
+# Adjust Citations and prepare for Merge
+# Assumption that ID is the officer's ID
+citations_processed = citations %>%
+  mutate(
+    outcome = "Citation",
+    Gender = case_when(
+      Sex == "M" ~ "Male",
+      Sex == "F" ~ "Female",
+      TRUE ~ "Other/Unknown"
+    ),
+    Year = year(ViolationDate),
+    Month = month(ViolationDate),
+    DayOfMonth = day(ViolationDate),
+    Time = parse_date_time(Time, "HM"),
+    data_type = "Citation"
+  ) %>%
+  select(
+    outcome, Gender, Year, Month, DayOfMonth, Time, Offense_Description = Charge,
+    District = DISTRICT, Race, Ethnicity, Latitude, Longitude, OfficerID = ID, data_type
+  )
+
+# Adjust Warnings and prepare for Merge
+warnings_processed = warnings %>%
+  mutate(
+    outcome = "Warning",
+    Gender = case_when(
+      Sex == "M" ~ "Male",
+      Sex == "F" ~ "Female",
+      TRUE ~ "Other/Unknown"
+    ),
+    Year = year(ViolationDate),
+    Month = month(ViolationDate),
+    DayOfMonth = day(ViolationDate),
+    Time = parse_date_time(Time, "HM"),
+    data_type = "Warning"
+  ) %>%
+  select(
+    outcome, Gender, Year, Month, DayOfMonth, Time, Offense_Description, District = DISTRICT, Race, 
+    Ethnicity, Latitude = Lat, Longitude = Long, OfficerID = Officer_ID, data_type
+  )
+
+# Combined for ultimate Data coordination!
+combined_wc = bind_rows(citations_processed, warnings_processed)
+
+# Add ultimate binary outcome! 0 = Citation, 1 = Warning/ Got out of ticket
+combined_wc = combined_wc %>%
+  mutate(
+    BinaryOutcome = ifelse(outcome == "Warning", 1,0)
+  )
+
+## Change to Title Case for District Names
+combined_wc$District = tools::toTitleCase(tolower(combined_wc$District))
+
+## Examining Unverified data
+## After examination, unverified only makes up 0.0143 or 1.43% of the data set, so we will remove
+## because it is a very small portion of the total proportion. 
+combined_wc %>%
+  count(District) %>%
+  mutate(Proportion = n / sum(n)) %>%
+  arrange(desc(n))
+
+## Filter out Unverified and NA
+combined_wc = combined_wc %>%
+  filter(District != "Unverified")
+
+combined_wc = combined_wc %>%
+  filter(!is.na(District))
+
+## Filter out Other/Unknown Gender
+combined_wc_mf = combined_wc %>%
+  filter(Gender != "Other/Unknown")
+
+## Now for some visuals: Gender Chart
+## Examining the proportion of stops resulting in a Warning Vs Citation
+## the Warning rate is the proportion of incidents that are warnings.
+gender_warning_rate = combined_wc_mf %>%
+  group_by(Gender) %>%
+  summarise(
+    Total_Incidents = n(),
+    Warning_Rate = mean(BinaryOutcome)
+  ) %>%
+  ungroup()
+
+gender_chart = ggplot(gender_warning_rate,
+                      aes(x = Gender, y = Warning_Rate, fill = Gender)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = scales::percent(Warning_Rate, accuracy = 0.1)),
+            vjust = -0.5, size = 5) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, max(gender_warning_rate$Warning_Rate) * 1.1)) +
+  labs(
+    title = "Warning Rate by Gender",
+    subtitle = "Proportion of stops resulting in a Warning (vs Citation)",
+    x = "Gender",
+    y = "Warning Rate"
+  ) + theme_gray() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = c("Female" = "pink", "Male" = "skyblue"))
+
+gender_chart
+```
+```{r}
+## Now the Chi-Squared Test starting with the Contingency Table
+contingency_tbl = combined_wc_mf %>%
+  filter(Gender %in% c("Male", "Female")) %>%
+  select(Gender, BinaryOutcome) %>%
+  table()
+
+contingency_tbl
+
+chi_sq_results = chisq.test(contingency_tbl)
+
+chi_sq_results
+```
+
