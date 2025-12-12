@@ -5,9 +5,9 @@ editor: visual
 
 ## Group 1:
 
--   Nathania Stephens
-
 -   Hiba Awan
+
+-   Nathania Stephens
 
 # [Abstract]{.underline}
 
@@ -127,6 +127,7 @@ Next we look at the **Top 10 Arrest Type** by Incident Based Reporting (IBR) cod
 
 ```{r}
 #| echo: false
+#| warning: false
 # By IBRCode
 arrest_count = Arrest2023 %>%
   group_by(IBRCode) %>%
@@ -170,6 +171,8 @@ Next examining the **Top 10 Citations**
 Next an examination of warning versus citation will be observed... This will help understand what different factors could play into getting a warning or a citation.
 
 ```{r}
+#| echo: false
+#| warning: false
 library(readr)
 library(lubridate)
 
@@ -295,6 +298,8 @@ gender_chart
 ```
 
 ```{r}
+#| echo: false
+#| warning: false
 ## Now the Chi-Squared Test starting with the Contingency Table
 contingency_tbl = combined_wc_mf %>%
   filter(Gender %in% c("Male", "Female")) %>%
