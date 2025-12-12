@@ -77,7 +77,7 @@ To address this question the null and alternative hypothesis are established.
 
 *Alternative Hypothesis*: There is a link between gender and violation outcome.
 
-According to the cleaned and combined dataset for warnings and citation, there was a total of 88,320 records. By looking at the counts for each outcome (citation or warning), there are a lot more citations than there are warnings given out by FCPD. This stacked bar chart also shows that males have a higher count for both categories. i
+According to the cleaned and combined dataset for warnings and citation, there was a total of 88,320 records. By looking at the counts for each outcome (citation or warning), there are a lot more citations than there are warnings given out by FCPD. This stacked bar chart also shows that males have a higher count for both categories.
 
 ```{r}
 #| echo: false
@@ -204,7 +204,7 @@ Next, the warning rate for gender is calculated. This looks at the probability o
 \frac{\text{Number of Warnings}}{\text{Total Incidents (Warnings + Citations)}}
 $$
 
-This shows a slight difference in proportion between the two genders, with females having a higher warning rate than males. Is this difference significant or is it a result of chance or other factors? To help understand these results, the Chi-Squared Test is used.
+This shows a slight difference in proportion between the two genders, with females having a higher warning rate than males. In other words, females received more warnings than males. Is this difference significant or is it a result of chance or other factors? To help understand these results, the Chi-Squared Test is used.
 
 ```{r}
 #| echo: false
@@ -267,6 +267,10 @@ chi_sq_results
 expected_counts = chi_sq_results$expected
 expected_counts
 ```
+Then the chi-square test is ran using the citation and warning counts for male and females. 
+
+The results showed an $X^2 of 150.62, with 1 degree of freedom, and a p-value of less than 2.2e-16, which is must smaller than 0.05. Thus the null hypothesis is rejected.There is a statistically significant association between gender and violation outcome in Fairfax County.
+
 #### Another Questions....
 To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
 
