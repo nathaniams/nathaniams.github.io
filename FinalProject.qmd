@@ -38,7 +38,7 @@ Three datasets were pulled from the Fairfax County Police Department website. Th
 The data sets included between 24 and 34 variables, but some of many of the variables were redundant or were not applicable to the research (e.g. web_address, phone_number, name). The following attributes were key to the research conducted:
 
 | Column Name | Data Type | Description                                        |
-|----------------|----------------|-----------------------------------------|
+|------------------|------------------|-----------------------------------|
 | Date        | Date      | Date of Violation                                  |
 | Time        | Chr       | Time of Violation                                  |
 | Offense     | Chr       | Description of Violation                           |
@@ -71,7 +71,13 @@ To address questions related to gender, the data needed to be standardized and c
 
 #### **Question 1: Is there an association between gender and warnings?**
 
-According to the cleaned and combined dataset for warnings and citation, there was a total of 88,320 records. By looking at the counts for each outcome (citation or warning), there are a lot more citations than there are warnings given out by FCPD. This stacked bar chart also shows that males have a higher count for both categories.
+To address this question the null and alternative hypothesis are established.
+
+*Null Hypothesis*: There is no link between gender and violation outcome (warning or citation).
+
+*Alternative Hypothesis*: There is a link between gender and violation outcome.
+
+According to the cleaned and combined dataset for warnings and citation, there was a total of 88,320 records. By looking at the counts for each outcome (citation or warning), there are a lot more citations than there are warnings given out by FCPD. This stacked bar chart also shows that males have a higher count for both categories. i
 
 ```{r}
 #| echo: false
@@ -186,25 +192,23 @@ combined_wc_mf = combined_wc %>%
 ggplot(combined_wc_mf, aes(x = outcome, fill = Gender)) +
   geom_bar() +
   labs(
-    title = "Count of Outcomes (Citation/ Warning) by Gender",
+    title = "Count of Outcomes by Gender",
     x = "Outcome Type",
     y = "# of Incident",
     fill = "Gender"
   ) + theme_gray() + theme(plot.title = element_text(hjust = 0.5)) + 
-  scale_fill_manual(values = c("Female" = "pink", "Male" = "skyblue"))
+  scale_fill_manual(values = c("Female" = "lightpink2", "Male" = "lightsteelblue"))
 ```
 
-Next, the warning rate for gender is calculated. This looks at the probability of a male or female violator receiving a Warning instead of a citation e.g. getting out of a ticket. To calculate warning rate, the number of warnings are divided by the total number of incidents. This shows a slight difference in proportion between the two genders, with females having a higher warning rate than males. Is this difference significant or is it a result of chance or other factors? To help understand these results, the Chi-Squared Test is used.
-
-$$
+Next, the warning rate for gender is calculated. This looks at the probability of a male or female violator receiving a Warning instead of a citation e.g. getting out of a ticket. To calculate warning rate, the number of warnings are divided by the total number of incidents. $$
 \frac{\text{Number of Warnings}}{\text{Total Incidents (Warnings + Citations)}}
 $$
+
+This shows a slight difference in proportion between the two genders, with females having a higher warning rate than males. Is this difference significant or is it a result of chance or other factors? To help understand these results, the Chi-Squared Test is used.
 
 ```{r}
 #| echo: false
 #| warning: false
-
-
 ## Now for some visuals: Gender Chart
 ## Examining the proportion of stops resulting in a Warning Vs Citation
 ## the Warning rate is the proportion of incidents that are warnings.
@@ -228,10 +232,22 @@ gender_chart = ggplot(gender_warning_rate,
     x = "Gender",
     y = "Warning Rate"
   ) + theme_gray() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) +
-  scale_fill_manual(values = c("Female" = "pink", "Male" = "skyblue"))
+  scale_fill_manual(values = c("Female" = "lightpink2", "Male" = "lightsteelblue"))
 
 gender_chart
 ```
+
+$$
+\chi^2 = \sum \frac{(O-E)^2}{E}
+$$
+To implement the Chi-Square Test, a comparison of expected and observed counts are calculate.
+
+|        | Expected Citations | Observed Citations | Expected Warnings | Observed Warnings |
+|--------|--------------------|--------------------|-------------------|-------------------|
+| Male   | 42,891             | 43,657             | 16,173            | 15,408            |
+| Female | 21,243             | 20,478             | 8,011             | 8,777             |
+
+
 
 ```{r}
 #| echo: false
@@ -247,8 +263,11 @@ contingency_tbl
 chi_sq_results = chisq.test(contingency_tbl)
 
 chi_sq_results
-```
 
+expected_counts = chi_sq_results$expected
+expected_counts
+```
+#### Another Questions....
 To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
 
 General crime Mapping the arrest data for a geospatial visual of where arrest occur.
