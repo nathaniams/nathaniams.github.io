@@ -19,7 +19,7 @@ In 2023, there were over 30,000 arrests and close to 65,000 citations in Fairfax
 
 ## Goals/ Objectives
 
-In order to provide relevant and insightful crime information, several different visualization methods were applied to help easily interpret and compare data. Statistical learning techniques were utilized to help understand statistical significantly factors and associations between variables. Since the data utilized for this project is largely categorical the project focuses on techniques such as Chi-Squared Test, *Logistic Regression, Decision Trees and Random Forest*.
+In order to provide relevant and insightful crime information, several different visualization methods were applied to help easily interpret and compare data. Statistical learning techniques were utilized to help understand statistic significantly factors and associations between variables. Since the data utilized for this project is largely categorical the project focuses on techniques such as Chi-Squared Test, *Logistic Regression, Decision Trees and Random Forest*.
 
 # [Data]{.underline}
 
@@ -27,7 +27,7 @@ In order to provide relevant and insightful crime information, several different
 
 ## About the Data
 
-Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity general definition are provided:
+Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity general definitions are provided:
 
 **Arrest** - When a person is taken into custody to answer for an offense or when there is a deprivation or restraint of a person's liberty in any significant way.
 
@@ -35,27 +35,29 @@ Three datasets were pulled from the Fairfax County Police Department website. Th
 
 **Warning** - When a violation, typically minor, has been made but an officer issues a warning rather than a citation.
 
-The following attributes were key to the research conducted:
+The data sets included between 24 and 34 variables, but some of many of the variables were redundant or were not applicable to the research (e.g. web_address, phone_number, name). The following attributes were key to the research conducted:
 
-| Column Name | Data Type | Description                                       |
-|-------------|-----------|---------------------------------------------------|
-| Date        | Date      | Date of Violation                                 |
-| Time        | Chr       | Time of Violation                                 |
-| Offense     | Chr       | Description of Violation                          |
-| Gender      | Chr       | Gender of Violator                                |
-| Ethnicity   | Chr       | Hispanic or Non-Hispanic                          |
-| District    | Chr       | Administrative area                               |
-| Latitude    | Dbl       | Coordinates measuring north/ south of equator     |
-| Longitude   | Dbl       | Coordinates measuring east/ west of prime meridian|
-| Outcome     | Chr       | Result of violation, arrest, citation, or warning |
-
+| Column Name | Data Type | Description                                        |
+|--------------|--------------|--------------------------------------------|
+| Date        | Date      | Date of Violation                                  |
+| Time        | Chr       | Time of Violation                                  |
+| Offense     | Chr       | Description of Violation                           |
+| Gender      | Chr       | Gender of Violator                                 |
+| Ethnicity   | Chr       | Hispanic or Non-Hispanic                           |
+| District    | Chr       | Administrative area                                |
+| Latitude    | Dbl       | Coordinates measuring north/ south of equator      |
+| Longitude   | Dbl       | Coordinates measuring east/ west of prime meridian |
+| Outcome     | Chr       | Result of violation, arrest, citation, or warning  |
 
 ## Limitations and Assumptions
-Due to the nature of the data available on the Fairfax County Police Department website, analysis was limited to qualitative techniques. The approach taken for the project focused on predicting through qualitative responses or classification. This means that each record pulled from the Fairfax County Police Department (FCPD) would be assigned to a category or class. 
 
-While understanding local crime is the goal of this project, the data acquired only accounts for crime that was recorded by FCPD. It does not take into account crimes that were not report or any other crime that may have been reported through FCPD.
+Due to the nature of the data available on the Fairfax County Police Department website, analysis was limited to qualitative techniques. The approach taken for the project focused on predicting through qualitative responses or classification. This means that each record pulled from the Fairfax County Police Department (FCPD) would be assigned to a category or class.
+
+While understanding local crime is the goal of this project, the data acquired only accounts for crime that was recorded by FCPD. It does not take into account crimes that were not report or any other crime that was not reported through FCPD channels.
 
 ## Cleaning and Transformation
+
+To address questions related to gender, the data needed to be standardized and correctly categorized. Column names needed to be consistent across the three datasets to merge. Gender was used over Sex. Next the column data would be transformed to consistent labels, e.g. Male, Female, and Other/Unknown. Total proportion for Gender was examined, to verify that other/ unknown class could be removed without...
 
 # [Research Questions]{.underline}
 
@@ -65,16 +67,15 @@ While understanding local crime is the goal of this project, the data acquired o
 
 3)  
 
-## Exploratory Analysis
+## Research & Analysis
 
-To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
+#### **Question 1: Is there an association between gender and warnings?**
 
-General crime Mapping the arrest data for a geospatial visual of where arrest occur.l
+According to the cleaned and combined dataset for warnings and citation, there was a total of 88,320 records. By looking at the counts for each outcome (citation or warning), there are a lot more citations than there are warnings given out by FCPD. This stacked bar chart also shows that males have a higher count for both categories.
 
 ```{r}
-#| message: false
+#| echo: false
 #| warning: false
-#| include: false
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
@@ -84,121 +85,9 @@ library(sf)
 library(readr)
 library(scales)
 library(tidyr)
-
-Arrest2023 <- read_csv("2023_arrest_data.csv", 
-                       col_types = cols(ArresteeNumber = col_skip(), 
-                                        ArrestDate = col_date(format = "%m/%d/%Y"), 
-                                        ArrestTime = col_character(), WEB_ADDRESS = col_skip(), 
-                                        PHONE_NUMBER = col_skip(), NAME = col_skip()))
-
-## Remove any outliers by setting min/max lat and long.
-min_lat = 38.6
-max_lat = 39.0
-min_lon = -77.6
-max_lon = -77.0
-
-## Using all data but excluding any coordinates that are not within coordinates
-arrest_data_clean = Arrest2023 %>%
-  filter(
-    Latitude >= min_lat,
-    Latitude <= max_lat,
-    Longitude >= min_lon,
-    Longitude <= max_lon
-  )
-
-## Include district boundaries by reading in shape file downloaded from Fairfax County site
-district_boundaries = st_read("Supervisor_Districts/Supervisor_Districts.shp")
-
-## Transform to WGS84 projection to match basemap within leaflet
-if (st_crs(district_boundaries)$epsg != 4326) {
-  district_boundaries = st_transform(district_boundaries, 4326)
-}
-```
-
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-## Using leaflet to map the Arrest data and include district layers
-leaflet() %>%
-  addProviderTiles(providers$OpenStreetMap) %>%
-  addPolygons(
-    data = district_boundaries,
-    fillOpacity = 0.5,
-    color = "black",
-    weight = 1,
-    popup = ~paste("District:", DISTRICT)
-  ) %>%
-  addCircleMarkers(
-    data = arrest_data_clean,
-    lng = ~Longitude,
-    lat = ~Latitude,
-    radius = 3,
-    color = "darkred",
-    stroke = FALSE,
-    fillOpacity = 0.4,
-    popup = ~paste(
-      "Case Number: ", CaseNumber, "<br>",
-      "Arrest Type: ", IBRDescription)
-  )
-```
-
-```{r}
-
-```
-
-Next we look at the **Top 10 Arrest Type** by Incident Based Reporting (IBR) codes.
-
-```{r}
-#| echo: false
-#| warning: false
-# By IBRCode
-arrest_count = Arrest2023 %>%
-  group_by(IBRCode) %>%
-  summarise(Count = n()) %>%
-  ungroup() %>%
-  arrange(desc(Count))
-
-# Get top 10
-top_10_arrest_IBR = head(arrest_count, 10)
-
-# Add codes - General Description
-IBRCodeDetails = read.csv("IBRcodes.csv")
-
-# Reassign the codes
-top_10_arrest_decoded = top_10_arrest_IBR %>%
-  left_join(IBRCodeDetails, by = c("IBRCode" = "CODE")) %>%
-  select(IBRCode, OFFENSE, everything())
-
-top_10_arrest_cleaned = top_10_arrest_decoded %>%
-  distinct(IBRCode, OFFENSE, .keep_all = TRUE)
-
-# Decode for cleaner results
-arrest_chart = ggplot(top_10_arrest_cleaned, aes(x = reorder(OFFENSE, Count),
-                                              y = Count)) +
-  geom_bar(stat = "identity", fill = "darkred") +
-  coord_flip() +
-  labs(title = "Top 10 Arrest Type by IBR decoded",
-       x = "Offense by IBR Code",
-       y = "Number of Arrests") +
-  theme_grey() +
-  geom_text(aes(label = Count), hjust = -0.1, size = 3.5) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
-
-arrest_chart
-
-```
-
-Next examining the **Top 10 Citations**
-
-**Warning Versus Citation** Next an examination of warning versus citation will be observed... This will help understand what different factors could play into getting a warning or a citation.
-
-```{r}
-#| echo: false
-#| warning: false
-library(readr)
 library(lubridate)
 
+# Read in the raw data for Warnings and Citations
 warnings = read_csv("2023_warning_data.csv", 
                          col_types = cols(Warnings_Date = col_date(format = "%m/%d/%Y"), 
                                           WEB_ADDRESS = col_skip(), PHONE_NUMBER = col_skip(), 
@@ -276,10 +165,10 @@ combined_wc$District = tools::toTitleCase(tolower(combined_wc$District))
 ## Examining Unverified data
 ## After examination, unverified only makes up 0.0143 or 1.43% of the data set, so we will remove
 ## because it is a very small portion of the total proportion. 
-combined_wc %>%
-  count(District) %>%
-  mutate(Proportion = n / sum(n)) %>%
-  arrange(desc(n))
+# combined_wc %>%
+#  count(District) %>%
+#  mutate(Proportion = n / sum(n)) %>%
+#  arrange(desc(n))
 
 ## Filter out Unverified and NA
 combined_wc = combined_wc %>%
@@ -291,6 +180,24 @@ combined_wc = combined_wc %>%
 ## Filter out Other/Unknown Gender
 combined_wc_mf = combined_wc %>%
   filter(Gender != "Other/Unknown")
+
+
+## Stacked Bar chart for Outcome and Gender
+ggplot(combined_wc_mf, aes(x = outcome, fill = Gender)) +
+  geom_bar() +
+  labs(
+    title = "Count of Outcomes (Citation/ Warning) by Gender",
+    x = "Outcome Type",
+    y = "# of Incident",
+    fill = "Gender"
+  ) + theme_gray() + theme(plot.title = element_text(hjust = 0.5)) + 
+  scale_fill_manual(values = c("Female" = "pink", "Male" = "skyblue"))
+```
+
+```{r}
+#| echo: false
+#| warning: false
+
 
 ## Now for some visuals: Gender Chart
 ## Examining the proportion of stops resulting in a Warning Vs Citation
@@ -335,6 +242,120 @@ chi_sq_results = chisq.test(contingency_tbl)
 
 chi_sq_results
 ```
+
+To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
+
+General crime Mapping the arrest data for a geospatial visual of where arrest occur.
+
+```{r}
+#| message: false
+#| warning: false
+#| include: false
+
+
+Arrest2023 <- read_csv("2023_arrest_data.csv", 
+                       col_types = cols(ArresteeNumber = col_skip(), 
+                                        ArrestDate = col_date(format = "%m/%d/%Y"), 
+                                        ArrestTime = col_character(), WEB_ADDRESS = col_skip(), 
+                                        PHONE_NUMBER = col_skip(), NAME = col_skip()))
+
+## Remove any outliers by setting min/max lat and long.
+min_lat = 38.6
+max_lat = 39.0
+min_lon = -77.6
+max_lon = -77.0
+
+## Using all data but excluding any coordinates that are not within coordinates
+arrest_data_clean = Arrest2023 %>%
+  filter(
+    Latitude >= min_lat,
+    Latitude <= max_lat,
+    Longitude >= min_lon,
+    Longitude <= max_lon
+  )
+
+## Include district boundaries by reading in shape file downloaded from Fairfax County site
+district_boundaries = st_read("Supervisor_Districts/Supervisor_Districts.shp")
+
+## Transform to WGS84 projection to match basemap within leaflet
+if (st_crs(district_boundaries)$epsg != 4326) {
+  district_boundaries = st_transform(district_boundaries, 4326)
+}
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+## Using leaflet to map the Arrest data and include district layers
+leaflet() %>%
+  addProviderTiles(providers$OpenStreetMap) %>%
+  addPolygons(
+    data = district_boundaries,
+    fillOpacity = 0.5,
+    color = "black",
+    weight = 1,
+    popup = ~paste("District:", DISTRICT)
+  ) %>%
+  addCircleMarkers(
+    data = arrest_data_clean,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    radius = 2.5,
+    color = "darkred",
+    stroke = FALSE,
+    fillOpacity = 0.3,
+    popup = ~paste(
+      "Case Number: ", CaseNumber, "<br>",
+      "Arrest Type: ", IBRDescription)
+  )
+```
+
+Next we look at the **Top 10 Arrest Type** by Incident Based Reporting (IBR) codes.
+
+```{r}
+#| echo: false
+#| warning: false
+# By IBRCode
+arrest_count = Arrest2023 %>%
+  group_by(IBRCode) %>%
+  summarise(Count = n()) %>%
+  ungroup() %>%
+  arrange(desc(Count))
+
+# Get top 10
+top_10_arrest_IBR = head(arrest_count, 10)
+
+# Add codes - General Description
+IBRCodeDetails = read.csv("IBRcodes.csv")
+
+# Reassign the codes
+top_10_arrest_decoded = top_10_arrest_IBR %>%
+  left_join(IBRCodeDetails, by = c("IBRCode" = "CODE")) %>%
+  select(IBRCode, OFFENSE, everything())
+
+top_10_arrest_cleaned = top_10_arrest_decoded %>%
+  distinct(IBRCode, OFFENSE, .keep_all = TRUE)
+
+# Decode for cleaner results
+arrest_chart = ggplot(top_10_arrest_cleaned, aes(x = reorder(OFFENSE, Count),
+                                              y = Count)) +
+  geom_bar(stat = "identity", fill = "darkred") +
+  coord_flip() +
+  labs(title = "Top 10 Arrest Type by IBR decoded",
+       x = "Offense by IBR Code",
+       y = "Number of Arrests") +
+  theme_grey() +
+  geom_text(aes(label = Count), hjust = -0.1, size = 3.5) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+
+arrest_chart
+
+```
+
+Next examining the **Top 10 Citations**
+
+**Warning Versus Citation** Next an examination of warning versus citation will be observed... This will help understand what different factors could play into getting a warning or a citation.
 
 # [Conclusion]{.underline}
 
