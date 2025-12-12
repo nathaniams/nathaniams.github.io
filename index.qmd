@@ -4,5 +4,4 @@ title: "Nat's Site"
 
 ## Welcome to my site. 
 
-This is a work in progress, but here you will find information about me, my redesign project, the redesign code, and helpful R code I've learned since starting my Graduate Program at GMU.
-
+This is a work in progress, but here you will find information about me, my final project which examines Fairfax County crime during 2023, my redesign project which focuses on visualizing US National Parks' Search and Rescue Incidents, along with the code for each project. Also include on this site are helpful R code and resources I've come across since starting my Graduate Program at GMU.

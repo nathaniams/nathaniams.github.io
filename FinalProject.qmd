@@ -15,7 +15,11 @@ editor: visual
 
 ## Motivation/ Purpose
 
+In 2023, there were over 30,000 arrests and close to 65,000 citations in Fairfax County. The Fairfax County boundaries, include areas such as Centreville, Chantilly, Herndon, Reston, Tysons Corner, McLean, Merrifield, George Mason, Annadale, Burke, Springfield, Alexandria, Lorton to name a few. If you live, work, or study in these areas then this project should be of interest to you. This project aims to inform Fairfax County patrons of crime information and hopefully provide some statistical insights that could be applicable.
+
 ## Goals/ Objectives
+
+In order to provide relevant and insightful crime information, several different visualization methods were applied to help easily interpret and compare data. Statistical learning techniques were utilized to help understand statistical significantly factors and associations between variables. Since the data utilized for this project is largely categorical the project focuses on techniques such as Chi-Squared Test, *Logistic Regression, Decision Trees and Random Forest*.
 
 # [Data]{.underline}
 
@@ -23,29 +27,49 @@ editor: visual
 
 ## About the Data
 
-Three datasets were used from to acquire arrest, citations, and warnings in the year 2023 from the Fairfax County Policy Department. For simplicity general definition are provided: 
+Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity general definition are provided:
 
 **Arrest** - When a person is taken into custody to answer for an offense or when there is a deprivation or restraint of a person's liberty in any significant way.
 
 **Citation** - Formal notice issued by law enforcement officer for a violation of law, typically related to traffic laws or other minor offenses. Typically requiring a violator to appear in court or pay a fine.
 
-**Warning** - When a violation, typically minor, has been made but an officer issues a warning rather than a citation. 
+**Warning** - When a violation, typically minor, has been made but an officer issues a warning rather than a citation.
 
-The following attributes were key to the research and conducted:
+The following attributes were key to the research conducted:
 
-| Column Name | Data Type | Description           |
-|-------------|-----------|-----------------------|
-|   Date      |  Date     |Date of offense        |
-|   Time      |  Chr      |   123   |
-|   Offense   |    1 |     1   |
+| Column Name | Data Type | Description                                       |
+|-------------|-----------|---------------------------------------------------|
+| Date        | Date      | Date of Violation                                 |
+| Time        | Chr       | Time of Violation                                 |
+| Offense     | Chr       | Description of Violation                          |
+| Gender      | Chr       | Gender of Violator                                |
+| Ethnicity   | Chr       | Hispanic or Non-Hispanic                          |
+| District    | Chr       | Administrative area                               |
+| Latitude    | Dbl       | Coordinates measuring north/ south of equator     |
+| Longitude   | Dbl       | Coordinates measuring east/ west of prime meridian|
+| Outcome     | Chr       | Result of violation, arrest, citation, or warning |
+
 
 ## Limitations and Assumptions
+Due to the nature of the data available on the Fairfax County Police Department website, analysis was limited to qualitative techniques. The approach taken for the project focused on predicting through qualitative responses or classification. This means that each record pulled from the Fairfax County Police Department (FCPD) would be assigned to a category or class. 
+
+While understanding local crime is the goal of this project, the data acquired only accounts for crime that was recorded by FCPD. It does not take into account crimes that were not report or any other crime that may have been reported through FCPD.
 
 ## Cleaning and Transformation
 
+# [Research Questions]{.underline}
+
+1)  Is there an association between gender and warnings?
+
+2)  Are there other factors that determine if someone gets out of a "ticket"? OR Are you more likely to get a ticket at the end of the month (some believe that police officers have a monthly quota)
+
+3)  
+
 ## Exploratory Analysis
 
-Mapping the arrest data for a geospatial visual of where arrest occur.
+To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
+
+General crime Mapping the arrest data for a geospatial visual of where arrest occur.l
 
 ```{r}
 #| message: false
@@ -152,7 +176,7 @@ top_10_arrest_cleaned = top_10_arrest_decoded %>%
 # Decode for cleaner results
 arrest_chart = ggplot(top_10_arrest_cleaned, aes(x = reorder(OFFENSE, Count),
                                               y = Count)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_bar(stat = "identity", fill = "darkred") +
   coord_flip() +
   labs(title = "Top 10 Arrest Type by IBR decoded",
        x = "Offense by IBR Code",
@@ -167,8 +191,7 @@ arrest_chart
 
 Next examining the **Top 10 Citations**
 
-**Warning Versus Citation**
-Next an examination of warning versus citation will be observed... This will help understand what different factors could play into getting a warning or a citation.
+**Warning Versus Citation** Next an examination of warning versus citation will be observed... This will help understand what different factors could play into getting a warning or a citation.
 
 ```{r}
 #| echo: false
@@ -312,15 +335,6 @@ chi_sq_results = chisq.test(contingency_tbl)
 
 chi_sq_results
 ```
-
-
-# [Research Questions]{.underline}
-
-1)  Is there an association between gender and warnings?
-
-2)  Are there other factors that determine if someone gets out of a "ticket"? OR Are you more likely to get a ticket at the end of the month (some believe that police officers have a monthly quota)
-
-3)  
 
 # [Conclusion]{.underline}
 
