@@ -3,6 +3,8 @@ title: "Final Project"
 editor: visual
 ---
 
+![](FC_StatData.png){fig-align="center" width="580"}
+
 ## Group 1:
 
 -   Hiba Awan
@@ -27,18 +29,18 @@ In order to provide relevant and insightful crime information, several different
 
 ## About the Data
 
-Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity general definitions are provided:
+Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity, general definitions are provided:
 
-**Arrest** - When a person is taken into custody to answer for an offense or when there is a deprivation or restraint of a person's liberty in any significant way.
+-   **Arrest** - When a person is taken into custody to answer for an offense or when there is a deprivation or restraint of a person's liberty in any significant way.
 
-**Citation** - Formal notice issued by law enforcement officer for a violation of law, typically related to traffic laws or other minor offenses. Typically requiring a violator to appear in court or pay a fine.
+-   **Citation** - Formal notice issued by law enforcement officer for a violation of law, typically related to traffic laws or other minor offenses. Typically requiring a violator to appear in court or pay a fine.
 
-**Warning** - When a violation, typically minor, has been made but an officer issues a warning rather than a citation.
+-   **Warning** - When a violation, typically minor, has been made but an officer issues a warning rather than a citation.
 
 The data sets included between 24 and 34 variables, but some of many of the variables were redundant or were not applicable to the research (e.g. web_address, phone_number, name). The following attributes were key to the research conducted:
 
 | Column Name | Data Type | Description                                        |
-|------------------|------------------|-----------------------------------|
+|-------------------|-------------------|----------------------------------|
 | Date        | Date      | Date of Violation                                  |
 | Time        | Chr       | Time of Violation                                  |
 | Offense     | Chr       | Description of Violation                           |
@@ -73,9 +75,9 @@ To address questions related to gender, the data needed to be standardized and c
 
 To address this question the null and alternative hypothesis are established.
 
-*Null Hypothesis*: There is no link between gender and violation outcome (warning or citation).
+*Null Hypothesis:* There is no association between gender and violation outcome, warning or citation. This would mean that the likelihood of a violator getting a warning is independent of gender.
 
-*Alternative Hypothesis*: There is a link between gender and violation outcome.
+*Alternative Hypothesis:* There is an association between gender and violation outcome. This implies that gender affects the outcome of whether a violator is given a citation or warning.
 
 According to the cleaned and combined dataset for warnings and citation, there was a total of 88,320 records. By looking at the counts for each outcome (citation or warning), there are a lot more citations than there are warnings given out by FCPD. This stacked bar chart also shows that males have a higher count for both categories.
 
@@ -204,7 +206,7 @@ Next, the warning rate for gender is calculated. This looks at the probability o
 \frac{\text{Number of Warnings}}{\text{Total Incidents (Warnings + Citations)}}
 $$
 
-This shows a slight difference in proportion between the two genders, with females having a higher warning rate than males. In other words, females received more warnings than males. Is this difference significant or is it a result of chance or other factors? To help understand these results, the Chi-Squared Test is used.
+This shows a slight difference in proportion between the two genders, with females having a higher warning rate than males. In other words, females received more warnings than males. Is this difference significant or is it a result of chance or other factors? To help understand these results, the Chi-Square Test of Independence is used. The Chi-Square Test of Independence will help determine whether the variables, gender and outcome, are independent or if there is a relationship between them.
 
 ```{r}
 #| echo: false
@@ -239,39 +241,79 @@ gender_chart
 
 $$
 \chi^2 = \sum \frac{(O-E)^2}{E}
-$$
-To implement the Chi-Square Test, a comparison of expected and observed counts are calculate.
+$$ To implement the Chi-Square Test, a contingency table is generated, which shows the distribution for gender and outcome.
 
-|        | Expected Citations | Observed Citations | Expected Warnings | Observed Warnings |
-|--------|--------------------|--------------------|-------------------|-------------------|
-| Male   | 42,891             | 43,657             | 16,173            | 15,408            |
-| Female | 21,243             | 20,478             | 8,011             | 8,777             |
-
-
+| Gender | Citations | Warnings |
+|--------|-----------|----------|
+| Female | 20,478    | 8,777    |
+| Male   | 43,657    | 15,408   |
 
 ```{r}
-#| echo: false
 #| warning: false
+#| include: false
 ## Now the Chi-Squared Test starting with the Contingency Table
 contingency_tbl = combined_wc_mf %>%
   filter(Gender %in% c("Male", "Female")) %>%
   select(Gender, BinaryOutcome) %>%
   table()
 
-contingency_tbl
-
 chi_sq_results = chisq.test(contingency_tbl)
 
-chi_sq_results
-
 expected_counts = chi_sq_results$expected
-expected_counts
-```
-Then the chi-square test is ran using the citation and warning counts for male and females. 
 
-The results showed an $X^2 of 150.62, with 1 degree of freedom, and a p-value of less than 2.2e-16, which is must smaller than 0.05. Thus the null hypothesis is rejected.There is a statistically significant association between gender and violation outcome in Fairfax County.
+```
+
+The results of the Chi-Square test shows:
+
+-   **Chi-Square Statistic (x-squared)**: The chi-square test statistic is 150.62. This is the discrepancy between the observed frequencies, citations and warnings, and the expected frequencies if there were no association between the gender and outcome. This is demonstrated in the below tables.
+
+| Gender | Expected Citations | Observed Citations | Expected Warnings | Observed Warnings |
+|---------------|---------------|---------------|---------------|---------------|
+| Female | 21,243 | 20,478 | 8,011 | 8,777 |
+| Male | 42,891 | 43,657 | 16,173 | 15,408 |
+
+-   **Degrees of Freedom (df)**: The degree of freedom for this test is 1, which is the number of rows minus 1 multiplied by number of columns minus 1.
+
+-   **p-value**: The p-value is 2.2e-16 which is much smaller than 0.05. This represents the probability of observing the chi-square statistic, 150.62, or more if the null hypothesis were true.
+
+To visualize each value in the above table by its contribution to the chi-square test a heatmap is generated. This quickly shows which values have the highest contribution percentage.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+# Heatmap
+library(pheatmap)
+# observed count
+observed_counts = chi_sq_results$observed
+# Calculated expected above.
+# Calculate residuals
+pearson_residuals = chi_sq_results$residuals
+
+# Calculate contributions to chi-square statistic
+contributions = (observed_counts - expected_counts)^2 / expected_counts
+
+total_chi_square = chi_sq_results$statistic
+
+percentage_contributions = 100 * contributions / total_chi_square
+colnames(percentage_contributions) = c("Citation", "Warning")
+pheatmap(percentage_contributions,
+         display_numbers = TRUE,
+         cluster_rows = FALSE,
+         cluster_cols = FALSE,
+         main = "Percentage Contribution to Chi-Square Statistic",
+         fontsize = 11,
+         fontsize_row = 11,
+         fontsize_col = 11,
+         fontsize_number = 15
+         )
+
+```
+
+Thus the null hypothesis is rejected. The results show that there is a statistically significant association between gender and violation outcome in Fairfax County. In other words, the Chi-square test indicates that the likelihood of a violation outcome is significantly associated with gender.
 
 #### Another Questions....
+
 To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
 
 General crime Mapping the arrest data for a geospatial visual of where arrest occur.
