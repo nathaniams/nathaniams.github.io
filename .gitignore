@@ -2,5 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-
 /.quarto/
+.RDataTmp
+docs/
+.RDataTmp1
