@@ -329,6 +329,7 @@ $$
 The higher intensity or darker color areas represent a higher citation rate. The citation rate represents the number of citations divided by the total outcome which includes both warnings and citations. During the hours of 0500-0600 there appears to be less warnings issued and instead citations issues. This also corresponds to morning rush times. 
 
 ```{r}
+#| label: heatmap
 #| echo: false
 #| message: false
 #| warning: false
@@ -412,6 +413,42 @@ plot_heatmap_discrete_axes = ggplot(
 
 ggplotly(plot_heatmap_discrete_axes, tooltip = "text")
 ```
+
+If interactive heatmap does not show:
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+plot_heatmap_discrete_axes = ggplot(
+  heatmap_days, 
+  aes(x = Hour, y = DayOfMonth, fill = Citation_Rate, text = text)
+) +
+  geom_tile(aes(width = 1, height = 1), color = "white", linewidth = 0.1) +
+  scale_fill_viridis(
+    option = "magma",
+    direction = -1,
+    name = "Citation Rate",
+    labels = scales::percent
+  ) +
+  scale_x_discrete(name = "Hour of Day (0 = Midnight, 12 = Noon)", drop = FALSE) + 
+  scale_y_discrete(drop = FALSE) + 
+  labs(
+    title = "Citation Rate by Day of Month and Hour of Day",
+    subtitle = "Higher intensity (darker color) indicates a higher proportion of Citations",
+    y = "Day of the Month"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(vjust = 0.1, hjust = 0.1),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+plot_heatmap_discrete_axes
+```
+
 
 Using Logistic Regression... will update this with cleaner numbers....
 ```{r}
