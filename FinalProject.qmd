@@ -65,7 +65,7 @@ To address questions related to gender, the data needed to be standardized and c
 
 1)  Is there an association between gender and warnings?
 
-2)  Are there other factors that determine if someone gets out of a "ticket"? OR Are you more likely to get a ticket at the end of the month (some believe that police officers have a monthly quota)
+2)  Does Time of Day or Day of the Month Factor into Number of Citations?
 
 3)  
 
@@ -134,7 +134,7 @@ citations_processed = citations %>%
     data_type = "Citation"
   ) %>%
   select(
-    outcome, Gender, Year, Month, DayOfMonth, Time, Offense_Description = Charge,
+    outcome, Gender, Year, Month, DayOfMonth, ViolationDate, Time, Offense_Description = Charge,
     District = DISTRICT, Race, Ethnicity, Latitude, Longitude, OfficerID = ID, data_type
   )
 
@@ -154,7 +154,7 @@ warnings_processed = warnings %>%
     data_type = "Warning"
   ) %>%
   select(
-    outcome, Gender, Year, Month, DayOfMonth, Time, Offense_Description, District = DISTRICT, Race, 
+    outcome, Gender, Year, Month, DayOfMonth, ViolationDate, Time, Offense_Description, District = DISTRICT, Race, 
     Ethnicity, Latitude = Lat, Longitude = Long, OfficerID = Officer_ID, data_type
   )
 
@@ -202,8 +202,12 @@ ggplot(combined_wc_mf, aes(x = outcome, fill = Gender)) +
   scale_fill_manual(values = c("Female" = "lightpink2", "Male" = "lightsteelblue"))
 ```
 
-Next, the warning rate for gender is calculated. This looks at the probability of a male or female violator receiving a Warning instead of a citation e.g. getting out of a ticket. To calculate warning rate, the number of warnings are divided by the total number of incidents. $$
-\frac{\text{Number of Warnings}}{\text{Total Incidents (Warnings + Citations)}}
+Next, the warning rate for gender is calculated. This looks at the probability of a male or female violator receiving a Warning instead of a citation e.g. getting out of a ticket. To calculate warning rate, the number of warnings are divided by the total number of incidents. 
+
+$$
+\begin{align*}
+Warning Rate = \frac{\text{Number of Warnings}}{\text{Total Incidents (Warnings + Citations)}}
+\end{align*}
 $$
 
 This shows a slight difference in proportion between the two genders, with females having a higher warning rate than males. In other words, females received more warnings than males. Is this difference significant or is it a result of chance or other factors? To help understand these results, the Chi-Square Test of Independence is used. The Chi-Square Test of Independence will help determine whether the variables, gender and outcome, are independent or if there is a relationship between them.
@@ -311,6 +315,168 @@ pheatmap(percentage_contributions,
 ```
 
 Thus the null hypothesis is rejected. The results show that there is a statistically significant association between gender and violation outcome in Fairfax County. In other words, the Chi-square test indicates that the likelihood of a violation outcome is significantly associated with gender.
+
+#### **Question #: Does Time of Day or Day of the Month Factor into Number of Citations?**
+
+To examine the likelihood of a getting a citation versus a warning (outcome of a violation), a heatmap is generated to understand how this behavior looks during each day of the month and hour of the day (24-hour clock). To calculate the citation rate, the following equation is used.
+
+$$
+\begin{align*}
+Citation Rate = \frac{\text{Number of Citations}}{\text{Total Incidents (Warnings + Citations)}}
+\end{align*}
+$$
+
+The higher intensity or darker color areas represent a higher citation rate. The citation rate represents the number of citations divided by the total outcome which includes both warnings and citations. During the hours of 0500-0600 there appears to be less warnings issued and instead citations issues. This also corresponds to morning rush times. 
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(viridis)
+library(tidyr)
+
+combined_wc_mf = combined_wc_mf %>%
+  mutate(
+    Hour = hour(Time),
+    Minute = minute(Time),
+    Time_of_day = case_when(
+      Hour >= 5 & Hour < 10 ~ "Morning Rush (0500-1000)",
+      Hour >= 10 & Hour < 15 ~ "Daytime (1000-1500)",
+      Hour >= 15 & Hour < 19 ~ "Evening Rush (1500-1900)",
+      TRUE ~ "Night/Late Night (1900-0500)"
+    ) 
+  )
+
+stop_count_by_day = combined_wc_mf %>%
+  group_by(DayOfMonth) %>%
+  summarise(Stop_Count = n()) %>%
+  ungroup()
+
+# Make interactive heatmap using plotly
+library(plotly)
+
+heatmap_days = combined_wc_mf %>%
+  group_by(DayOfMonth, Hour) %>%
+  summarise(
+    TotalOutcomes = n(),
+    TotalCitations = sum(BinaryOutcome == 0, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    Citation_Rate = TotalCitations/TotalOutcomes
+  ) %>%
+  tidyr::complete(DayOfMonth, Hour, fill = list(TotalOutcomes = 0, Citation_Rate = 0))
+
+# label for x-axis
+all_hours = as.character(0:23)
+
+# Convert to factor
+heatmap_days$Hour = factor(heatmap_days$Hour)
+heatmap_days$DayOfMonth = factor(heatmap_days$DayOfMonth)
+
+# Text for interactive part
+heatmap_days = heatmap_days %>%
+  mutate(text = paste0("Hour: ", Hour, "\n", "Day: ", DayOfMonth, "\n", "Citation Rate: ",round(Citation_Rate,2)))
+
+## trying to get all axes
+plot_heatmap_discrete_axes = ggplot(
+  heatmap_days, 
+  aes(x = Hour, y = DayOfMonth, fill = Citation_Rate, text = text)
+) +
+  geom_tile(aes(width = 1, height = 1), color = "white", linewidth = 0.1) +
+  scale_fill_viridis(
+    option = "magma",
+    direction = -1,
+    name = "Citation Rate",
+    labels = scales::percent
+  ) +
+  scale_x_discrete(name = "Hour of Day (0 = Midnight, 12 = Noon)", drop = FALSE) + 
+  scale_y_discrete(drop = FALSE) + 
+  labs(
+    title = "Citation Rate by Day of Month and Hour of Day",
+    subtitle = "Higher intensity (darker color) indicates a higher proportion of Citations",
+    y = "Day of the Month"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(vjust = 0.1, hjust = 0.1),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+ggplotly(plot_heatmap_discrete_axes, tooltip = "text")
+```
+
+Using Logistic Regression... will update this with cleaner numbers....
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(dplyr)
+library(lubridate)
+library(janitor)
+
+combined_wc_mf = combined_wc_mf %>%
+  mutate(
+    DayOfWeek = factor(
+      wday(ViolationDate, label = TRUE, week_start = 1),
+      levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    )
+  )
+
+model_columns = c(
+  "BinaryOutcome",
+  "Hour",
+  "DayOfMonth",
+  "DayOfWeek",
+  "District",
+  "Gender",
+  "Race"
+)
+
+data_for_modeling = combined_wc_mf %>%
+  select(all_of(model_columns)) %>%
+  mutate(across(c(Hour, DayOfMonth, DayOfWeek, District, Gender, Race), as.factor)) %>%
+  mutate(BinaryOutcome = factor(BinaryOutcome, levels = c(0, 1))) %>%
+  na.omit()
+
+data_for_modeling
+
+model_formula_2 = BinaryOutcome ~ .
+
+logistic_model_1 = glm(
+  formula = model_formula_2,
+  data = data_for_modeling,
+  family = binomial(link = "logit")
+)
+
+logistic_model_1
+
+odds_ratios = exp(coef(logistic_model_1))
+
+odds_ratios_df = data.frame(
+  Variable = names(odds_ratios),
+  OddsRatio = odds_ratios
+)
+
+print(odds_ratios_df %>%
+        filter(Variable != "(Intercept)") %>%
+        arrange(OddsRatio) %>%
+        head(30))
+
+## Discretion of warning used
+print(odds_ratios_df %>%
+        filter(Variable != "(Intercept)") %>%
+        arrange(desc(OddsRatio)) %>%
+        head(30))
+```
+
 
 #### Another Questions....
 
@@ -424,9 +590,6 @@ arrest_chart
 
 ```
 
-Next examining the **Top 10 Citations**
-
-**Warning Versus Citation** Next an examination of warning versus citation will be observed... This will help understand what different factors could play into getting a warning or a citation.
 
 # [Conclusion]{.underline}
 
