@@ -683,29 +683,101 @@ round(auc_value_chrono, 4)
 
 Finally, we’ll be exploring the relationships between the outcomes of crime incidents and their district and demographic (gender, race, ethnicity) variables. Addressing this final question involved combining the three data sets of different crime outcomes: arrest data, citation data, and warning data.
 
-(EnforcementOutcomesByDistrict)
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+combined_data <- read.csv("combined_crime_data.csv")
 
-Starting with the outcomes across different districts, we start off by performing a chi-square test to establish whether there’s a relationship between the crime outcomes and the districts they took place in.
+library(ggplot2)
+
+ggplot(combined_data, aes(x = Outcome, fill = District)) +
+  geom_bar(position = "stack") + # change to "fill" for proportions
+  coord_flip() +
+  labs(
+    title = "Enforcement Outcomes by District",
+    x = "Outcome",
+    y = "Count",
+    fill = "District"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+Starting with the outcomes across different districts, we start off by performing a chi-square test to establish whether there's a relationship between the crime outcomes and the districts they took place in.
 
 *Null Hypothesis:* Enforcement outcome is independent of police district.
 
 *Alternative hypothesis:* Enforcement outcome and police district are associated.
 
-For the chi-square implementation, a contingency table for the district and outcome counts is generated: (table)
+For the chi-square implementation, a contingency table for the district and outcome counts is generated:
 
-From both the visualization above and the table output, we can see that citations are the most common outcome among the districts. However, this won’t affect the test as chi-square allows unequal margin totals. The other outcomes, arrests and warnings, vary substantially in volume across districts. Some districts (like Sully, Springfield, Providence) show particularly high citation counts, while others (Braddock, Dranesville) show lower overall enforcement volumes.
+```{r}
+#| echo: false
+table(combined_data$District, combined_data$Outcome)
+```
+
+From both the visualization above and the table output, we can see that citations are the most common outcome among the districts. However, this won't affect the test as chi-square allows unequal margin totals. The other outcomes, arrests and warnings, vary substantially in volume across districts. Some districts (like Sully, Springfield, Providence) show particularly high citation counts, while others (Braddock, Dranesville) show lower overall enforcement volumes.
 
 Then the test is performed:
 
-(Chi-Squared test)
+```{r}
+#| echo: false
+table(combined_data$District, combined_data$Outcome)
+```
 
 The chi-square statistic is extremely large, which indicates a substantial deviation between observed and expected counts. The p-value is also low enough that we reject the null hypothesis. Therefore, there is a statistically significant association between district and enforcement outcome.
 
 From this, we can see that enforcement severity varies by district and district-level patterns justify further modeling.
 
-(Enforcement Outcomes by Demographics)
+```{r}
+#| echo: false
+library(dplyr)
+library(tidyr)
 
-(results) Performing multinomial logistic regression shows that enforcement outcomes vary systematically across both police districts and demographic groups. Certain districts, such as Providence and Sully, have higher relative odds of arrest compared to citations or warnings. Race and ethnicity are also significant predictors: Black and Hispanic individuals are more likely to be arrested rather than receive less severe enforcement actions. Gender has smaller but detectable effects. These results indicate that enforcement outcomes are influenced by both location and demographic characteristics.
+demo_long <- combined_data %>%
+  pivot_longer(
+    cols = c(Gender, Race, Ethnicity),
+    names_to = "variable",
+    values_to = "group"
+  )
+
+ggplot(demo_long, aes(x = Outcome, fill = group)) +
+  geom_bar(position = "stack") +
+  facet_wrap(~ variable, scales = "free_x") +
+  coord_flip() +
+  labs(
+    title = "Enforcement Outcomes by Demographics",
+    x = "Outcome",
+    y = "Count",
+    fill = "Demographic Group"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+In order to test both the district and demographic variables affects, below we perform logistic regression:
+
+```{r}
+#| include: false
+library(nnet)
+
+combined_data$Outcome  <- factor(combined_data$Outcome)
+combined_data$Race     <- factor(combined_data$Race)
+combined_data$Gender   <- factor(combined_data$Gender)
+combined_data$District <- factor(combined_data$District)
+combined_data$Ethnicity <- factor(combined_data$Ethnicity)
+
+model <- multinom(Outcome ~ Race + Gender + District + Ethnicity, data = combined_data)
+
+```
+
+```{r}
+#| echo: false
+summary(model)
+```
+
+Performing multinomial logistic regression shows that enforcement outcomes vary systematically across both police districts and demographic groups. Certain districts, such as Providence and Sully, have higher relative odds of arrest compared to citations or warnings. Race and ethnicity are also significant predictors: Black and Hispanic individuals are more likely to be arrested rather than receive less severe enforcement actions. Gender has smaller but detectable effects. These results indicate that enforcement outcomes are influenced by both location and demographic characteristics.
 
 # [Conclusion]{.underline}
 

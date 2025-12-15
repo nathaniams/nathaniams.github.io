@@ -510,3 +510,71 @@ auc_value_chrono = auc(roc_obj_chrono)
 round(auc_value_chrono, 4)
 ```
 
+
+```{r}
+combined_data <- read.csv("combined_crime_data.csv")
+
+library(ggplot2)
+
+ggplot(combined_data, aes(x = Outcome, fill = District)) +
+  geom_bar(position = "stack") + # change to "fill" for proportions
+  coord_flip() +
+  labs(
+    title = "Enforcement Outcomes by District",
+    x = "Outcome",
+    y = "Count",
+    fill = "District"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+table(combined_data$District, combined_data$Outcome)
+```
+
+```{r}
+chisq.test(table(combined_data$District, combined_data$Outcome))
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+demo_long <- combined_data %>%
+  pivot_longer(
+    cols = c(Gender, Race, Ethnicity),
+    names_to = "variable",
+    values_to = "group"
+  )
+
+ggplot(demo_long, aes(x = Outcome, fill = group)) +
+  geom_bar(position = "stack") +
+  facet_wrap(~ variable, scales = "free_x") +
+  coord_flip() +
+  labs(
+    title = "Enforcement Outcomes by Demographics",
+    x = "Outcome",
+    y = "Count",
+    fill = "Demographic Group"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+```{r}
+library(nnet)
+
+combined_data$Outcome  <- factor(combined_data$Outcome)
+combined_data$Race     <- factor(combined_data$Race)
+combined_data$Gender   <- factor(combined_data$Gender)
+combined_data$District <- factor(combined_data$District)
+combined_data$Ethnicity <- factor(combined_data$Ethnicity)
+
+model <- multinom(Outcome ~ Race + Gender + District + Ethnicity, data = combined_data)
+```
+
+```{r}
+#| echo: false
+summary(model)
+```
+
