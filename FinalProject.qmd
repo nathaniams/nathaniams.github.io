@@ -13,6 +13,14 @@ editor: visual
 
 # [Abstract]{.underline}
 
+This research project investigates Fairfax County Police Department (FCPD) data to derive law enforcement and crime patterns. The object of this project is to analyze and interpret the publicly available data for arrest, citations, and warning through visualization and statistical techniques. This helps to quantify and visualize crime and law enforcement trends throughout Fairfax County for 2023.
+
+The methods used in this project involved extensive data cleaning and feature creation to calculate and visualize outcome frequencies, as well citation and warning rates across various temporal and geospatial variables. Visual illustrations were generated using R, showcasing these rates over time. Statistical analysis included Chi-Squared Test to access association and a Binary Logistic Regression models to determine statistical significance and effects of factors like gender, time, and location to determine law enforcement outcome. The model provided odds ratios for variables such as hour of day and day of month to quantify the outcome probability for citation or warning.
+
+Key findings showed significant temporal influence in citation outcome. The analysis showed higher citation odds during morning rush hour and lower citation odds in certain districts. Further emphasize the importance of time and space for understanding law enforcement trends and highlights their essential role for applying predictive methods.
+
+Overall this project provides data-driven insight into FCPD law enforcement and crime patterns and how they are strongly influenced by temporal and geospatial variables. For future analyses, these findings coupled with more structured data on the exact offense type would very likely provide greater predictability and deeper understanding of law enforcement outcomes.
+
 # [Introduction]{.underline}
 
 ## Motivation
@@ -27,7 +35,7 @@ Provide relevant, understandable, and insightful crime patterns using several di
 
 ## Overview
 
-The Fairfax County Police Department (FCPD) operate in eight police districts and within those districts they are broken out into smaller Police Service Areas (PSAs). In 2023, the Fairfax County Police Department had more arrest and citation than the year prior. There were more assault offenses, theft and larceny. However, there were less homicide offenses, sex offenses, robbery, and fatal crashes. FCPD makes this information and its corresponding data available on their website. \[1\]Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity, general definitions are provided:
+The Fairfax County Police Department (FCPD) operate in eight police districts and within those districts they are broken out into smaller Police Service Areas (PSAs). In 2023, the Fairfax County Police Department had more arrest and citation than the year prior. There were more assault offenses, theft and larceny. However, there were less homicide offenses, sex offenses, robbery, and fatal crashes. FCPD makes this information and its corresponding data available on their website (FCDP Open Data Portal, n.d). Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity, general definitions are provided:
 
 -   **Arrest** - When a person is taken into custody to answer for an offense or when there is a deprivation or restraint of a person's liberty in any significant way.
 
@@ -35,7 +43,7 @@ The Fairfax County Police Department (FCPD) operate in eight police districts an
 
 -   **Warning** - When a violation, typically minor, has been made but an officer issues a warning rather than a citation.
 
-The data sets included between 24 and 34 variables, but many of the variables were redundant or were not applicable to the research (e.g. web_address, phone_number, name). Redundant columns and non-applicable columns were removed (Table 1). Additional columns were created from parsed information derived from original attributes, e.g. Hour of Day and Day of Month.
+The data sets included between 24 and 34 variables, but many of the variables were redundant or were not applicable to the research (e.g. web_address, phone_number, name).(FCDP Open Data Portal, n.d) Redundant columns and non-applicable columns were removed (Table 1). Additional columns were created from parsed information derived from original attributes, e.g. Hour of Day and Day of Month.
 
 | Column Name | Data Type | Description                                        |
 |-------------------|-------------------|----------------------------------|
@@ -648,9 +656,9 @@ odds_ratio_plot_chrono
 Gender and race were originally included but removed to isolate only time and space variables. Additionally, after running both models, the Area Under the Curve (AUC) increased only slightly (+ 0.0004) after removal of race and gender. This would mean that while gender and race were statistically significant, they were not as strong of predictors as date/time and district when classifying an outcome of either citation or warning. The AUC for the model that focused date/time and district was 0.6289. Which means that 63% of the citation/warning outcome is predictable using day of the month, time of day, progression of week, and district. The other 37% of the outcome is due to other factors not captured in this model. These factors could include offense type, violator's behavior, and officer variables. While not a particularly strong predictive model, the model helps understand the effects of time and location.
 
 ```{r}
-#| echo: false
 #| message: false
 #| warning: false
+#| include: false
 ## Calculate AUC
 library(pROC)
 
@@ -704,3 +712,13 @@ From this, we can see that enforcement severity varies by district and district-
 Through the research conducted in this project we were able to examine the law enforcement outcomes in Fairfax County using data from 2023. We were able to reject our null hypothesis which stated that there was no association between gender and violation outcome. Results from the Chi-Square test showed that there was a statistically significant association between gender and outcome. However, while gender was statistically significant, gender was found to be a weak predictor after running logistic regression models. Factors such as time and location had more of an influence when predicting the odds ratio of a warning versus citation. The Area Under of the Curve (AUC) for the logistic regression model was about 63% which considering the limitations of the dataset focusing specifically on time and space emphasizes the importance of time and location patterns for crime prediction. If factors such as offense type and description where used this would have very likely resulted in a stronger predictive model. While prediction was limited, this project highlights time and space trends showing odds ratio for citations between 5am and 6am were higher for receiving a citation while odds for receiving a warning increased as the week progressed. As noted, was the higher likelihood of a warning in the Mount Vernon, Mason, and Franconia districts.
 
 # [References]{.underline}
+
+1.  Fairfax County Police Department (FCPD) Open Data Portal. (n.d.). FCPD Annual Reports. https://www.fcpod.org/pages/annual-reports
+
+2.  Google. (2025). Gemini (Flash 2.5) \[Large language model\]. Retrieved from https://gemini.google.com/
+
+3.  Thevapalan, A. (2024, August 29). Chi-Square Test in R: A Complete Guide. DataCamp. https://www.datacamp.com/tutorial/chi-square-test-r
+
+4.  Chugh, V. (2023, March 17). Logistic Regression in R Tutorial. DataCamp. https://www.datacamp.com/tutorial/logistic-regression-R
+
+5.  James, G., Witten, D., Hastie, T., & Tibshirani, R. (2013). An Introduction to Statistical Learning: with Applications in R (1st ed. 2013.). Springer New York. https://doi.org/10.1007/978-1-4614-7138-7
