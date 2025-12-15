@@ -15,21 +15,19 @@ editor: visual
 
 # [Introduction & Background]{.underline}
 
-## Motivation/ Purpose
+## Motivation
 
-In 2023, there were over 30,000 arrests and close to 65,000 citations in Fairfax County. The Fairfax County boundaries, include areas such as Centreville, Chantilly, Herndon, Reston, Tysons Corner, McLean, Merrifield, George Mason, Annadale, Burke, Springfield, Alexandria, Lorton to name a few. If you live, work, or study in these areas then this project should be of interest to you. This project aims to inform Fairfax County patrons of crime information and hopefully provide some statistical insights that could be applicable.
+In 2023, there were over 30,000 arrests and close to 65,000 citations in Fairfax County. The Fairfax County boundaries, include areas such as Centreville, Chantilly, Herndon, Reston, Tysons Corner, McLean, Merrifield, George Mason, Annadale, Burke, Springfield, Alexandria, Lorton to name a few. If you live, work, or study in these areas then this project should be of interest to you. This project aims to inform Fairfax County patrons of violation, warning, and arrest trends and hopefully provide some statistical insights that is applicable.
 
-## Goals/ Objectives
+## Goals
 
-In order to provide relevant and insightful crime information, several different visualization methods were applied to help easily interpret and compare data. Statistical learning techniques were utilized to help understand statistic significantly factors and associations between variables. Since the data utilized for this project is largely categorical the project focuses on techniques such as Chi-Squared Test, *Logistic Regression, Decision Trees and Random Forest*.
+Provide relevant, understandable, and insightful crime patterns using several different visualization and statistical methods. Deliver clear and concise graphs and charts that help readers easily interpret and compare data. Utilize statistical learning techniques to examine data, interpret statistical significant factors, and understand associations between variables. Since the data utilized for this project is largely categorical this project focuses on techniques such as Chi-Squared Test and Logistic Regression.
 
 # [Data]{.underline}
 
 ## Overview
 
-## About the Data
-
-Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity, general definitions are provided:
+The Fairfax County Police Department (FCPD) operate in eight police districts and within those districts they are broken out into smaller Police Service Areas (PSAs). In 2023, the Fairfax County Police Department had more arrest and citation than the year prior. There were more assault offenses, theft and larceny. However, there were less homicide offenses, sex offenses, robbery, and fatal crashes. FCPD makes this information and its corresponding data available on their website. \[1\]Three datasets were pulled from the Fairfax County Police Department website. They covered arrest, citations, and warnings in the year 2023. For simplicity, general definitions are provided:
 
 -   **Arrest** - When a person is taken into custody to answer for an offense or when there is a deprivation or restraint of a person's liberty in any significant way.
 
@@ -37,7 +35,7 @@ Three datasets were pulled from the Fairfax County Police Department website. Th
 
 -   **Warning** - When a violation, typically minor, has been made but an officer issues a warning rather than a citation.
 
-The data sets included between 24 and 34 variables, but some of many of the variables were redundant or were not applicable to the research (e.g. web_address, phone_number, name). Redundant columns and non-applicable columns were removed (Table 1).
+The data sets included between 24 and 34 variables, but many of the variables were redundant or were not applicable to the research (e.g. web_address, phone_number, name). Redundant columns and non-applicable columns were removed (Table 1). Additional columns were created from parsed information derived from original attributes, e.g. Hour of Day and Day of Month.
 
 | Column Name | Data Type | Description                                        |
 |-------------------|-------------------|----------------------------------|
@@ -55,19 +53,19 @@ The data sets included between 24 and 34 variables, but some of many of the vari
 
 ## Limitations and Assumptions
 
-Due to the nature of the data available on the Fairfax County Police Department website, analysis was limited to qualitative techniques. The approach taken for the project focused on predicting through qualitative responses or classification. This means that each record pulled from the Fairfax County Police Department (FCPD) would be assigned to a category or class.
+Due to the nature of the data available from the Fairfax County Police Department website, analysis was limited to qualitative techniques. The approach taken for the project focused on predicting through qualitative responses or classification. This means that each record pulled from the Fairfax County Police Department (FCPD) would be assigned to a category or class.
 
 While understanding local crime is the goal of this project, the data acquired only accounts for crime that was recorded by FCPD. It does not take into account crimes that were not report or any other crime that was not reported through FCPD channels.
 
 ## Cleaning and Transformation
 
-To address questions related to gender, the data needed to be standardized and correctly categorized. Column names needed to be consistent across the three datasets to merge. Gender was used over Sex. Next the column data would be transformed to consistent labels, e.g. Male, Female, and Other/Unknown. Total proportion for Gender was examined, to verify that other/ unknown class could be removed without...
+In cases where applicable, duplicate and null values were removed. To address questions related to gender, the data needed to be standardized and correctly categorized. Column names needed to be consistent across the three datasets to merge. Gender was used over Sex. Next the column data would be transformed to consistent labels, e.g. Male, Female, and Other/Unknown. Records that included unverified or unknown were also removed in cases where they did not contribute to the overall analysis. To ensure these removals would not corrupt the analysis, proportions were examined to ensure its removal would not effect the overall results, typically less than 2% proportion. Depending on the research question, determined which datasets were merged.
 
 # [Research Questions]{.underline}
 
 1)  Is there an association between gender and warnings?
 
-2)  How does time and location factor into the odds of a Citations?
+2)  How does time and location factor into the odds of a Citation?
 
 3)  How do enforcement outcomes vary across districts and demographic groups?
 
@@ -285,7 +283,7 @@ The results of the Chi-Square test shows:
 
 -   **p-value**: The p-value is 2.2e-16 which is much smaller than 0.05. This represents the probability of observing the chi-square statistic, 150.62, or more if the null hypothesis were true.
 
-To visualize each value in the above table by its contribution to the chi-square test a heatmap is generated. This quickly shows which values have the highest contribution percentage.
+To illustrate this, a heatmap is generated showing each values contribution to the chi-square test. This easily demonstrates that female and warning had the highest percentage.
 
 ```{r}
 #| echo: false
@@ -325,7 +323,7 @@ Thus the null hypothesis is rejected. The results show that there is a statistic
 
 For this research question, variables such as time of day, progression of week, day of month, and district are examined to determine if those variable influence an officer's decision to issue a warning or citation. For this question, arrests are excluded since it is assumed a higher threshold of danger is imminent and would allow for less use of officers' discretion.
 
-To examine the likelihood of getting a citation versus a warning (outcome of a violation), a heatmap is generated to understand how this behavior looks during each day of the month and hour of the day (24-hour clock). To calculate the citation rate, the following equation is used.
+First, to explore the likelihood of getting a citation versus a warning (outcome of a violation), the citation rate is calculated, using the following equation.
 
 $$
 \begin{align*}
@@ -333,9 +331,7 @@ Citation Rate = \frac{\text{Number of Citations}}{\text{Total Incidents (Warning
 \end{align*}
 $$
 
-The higher intensity or darker color areas represent a higher citation rate. The citation rate represents the number of citations divided by the total outcome which includes both warnings and citations. During the hours of 0500-0600 (24-hour clock) the citation rate is much higher across most days of the month. This would imply that officers are less likely to issue warnings between 5am and 6am. This time also aligns with morning rush hour and higher volumes of traffic are expected. However, the same pattern of higher citation rates are not observed during evening rush hour.
-
-The heatmap also does not show higher intensities during the end of the month. Which is what we would expect to see if officers were attempting to meet monthly ticket quotas at the end of the month.
+Then, a heatmap is generated to see if there are any patterns that would indicate trends over hours of the day and throughout the month.
 
 ```{r}
 #| label: heatmap
@@ -459,7 +455,9 @@ plot_heatmap_discrete_axes = ggplot(
 plot_heatmap_discrete_axes
 ```
 
-Through the use of Logistic Regression, the odds ratios can be examined between citations and warnings for Fairfax county. Predictor variables, time of day, week progression, day of month, district are used to predict the probability that a warning or citation will occur. The results provide an odd ratios at the intercept of 0.532 which would indicate that the odds of getting a warning are lower than 1 to 1. In other words, if pulled over for speeding, it is not a flip of a coin whether you get a ticket or not. Your chance of getting a citation is higher according to the intercept. Additionally, the model showed that factors that increased the likelihood of getting a warning occurred in certain districts and progression of the week influences leniency. While factors such as time of day and day of the month showed an increased likelihood of a citation. Using the below graph, the top five odds ratio for citation and bottom five odds ratio for warnings are depicted.  The odds ratio 
+The higher intensity or darker color areas represent a higher citation rate. During the hours of 0500-0600 (24-hour clock) the citation rate is much higher across most days of the month. This would imply that officers are less likely to issue warnings between 5am and 6am. This time also aligns with morning rush hour and higher volumes of traffic are expected. However, the same pattern of higher citation rates are not observed during evening rush hour. The heatmap also does not show higher intensities during the end of the month. Which is what we would expect to see if officers were attempting to meet monthly ticket quotas at the end of the month.
+
+Next, through the use of Logistic Regression, the odds ratios is examined between citations and warnings for Fairfax county. Predictor variables, time of day, week progression, day of month, district are used to predict the probability that a warning or citation will occur. The results provide an odd ratios at the intercept of 0.532 which would indicate that the odds of getting a warning are less than 50/50. In other words, if pulled over for a traffic violation, it is not a flip of a coin whether you get a ticket or not. Your chance of getting a citation is higher according to the intercept generated through this logistic regression model. Additionally, the model showed factors that did increased the likelihood of getting a warning occurred in certain districts (Mount Vernon, Mason, and Franconia) and progression of the week influences leniency. In weekly progression, an odds ratio of 1.595 shows that as the week progresses from Monday to Sunday, the odds of recieving a warning increase by 59.5 %. Alternatively, factors such as time of day and day of the month showed an increased likelihood of a citation. Using the below graph, the top five odds ratio for citation and bottom five odds ratio for warnings are depicted.
 
 ```{r}
 #| message: false
@@ -603,10 +601,6 @@ round(auc_value_chrono, 4)
 
 ```
 
-
-
-
-
 #### Another Questions....
 
 To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
@@ -720,5 +714,7 @@ arrest_chart
 ```
 
 # [Conclusion]{.underline}
+
+Through the research conducted in this project we were able to examine the law enforcement outcomes in Fairfax County using data from 2023. We were able to reject our null hypothesis which stated that there was no association between gender and violation outcome. Results from the Chi-Square test showed that there was a statistically significant association between gender and outcome. However, while gender was statistically significant, gender was found to be a weak predictor after running logistic regression models. Factors such as time and location had more of an influence when predicting the odds ratio of a warning versus citation. The Area Under of the Curve (AUC) for the logistic regression model was about 63% which considering the limitations of the dataset focusing specifically on time and space emphasizes the importance of time and location patterns for crime prediction. If factors such as offense type and description where used this would have very likely resulted in a stronger predictive model. While prediction was limited, this project highlights time and space trends showing odds ratio for citations between 5am and 6am were higher for receiving a citation while odds for receiving a warning increased as the week progressed. As noted, was the higher likelihood of a warning in the Mount Vernon, Mason, and Franconia districts.
 
 # [References]{.underline}
