@@ -13,7 +13,7 @@ editor: visual
 
 # [Abstract]{.underline}
 
-# [Introduction & Background]{.underline}
+# [Introduction]{.underline}
 
 ## Motivation
 
@@ -335,9 +335,9 @@ Then, a heatmap is generated to see if there are any patterns that would indicat
 
 ```{r}
 #| label: heatmap
-#| echo: false
 #| message: false
 #| warning: false
+#| include: false
 library(dplyr)
 library(lubridate)
 library(ggplot2)
@@ -419,8 +419,6 @@ plot_heatmap_discrete_axes = ggplot(
 ggplotly(plot_heatmap_discrete_axes, tooltip = "text")
 ```
 
-If interactive heatmap does not show:
-
 ```{r}
 #| echo: false
 #| message: false
@@ -456,6 +454,78 @@ plot_heatmap_discrete_axes
 ```
 
 The higher intensity or darker color areas represent a higher citation rate. During the hours of 0500-0600 (24-hour clock) the citation rate is much higher across most days of the month. This would imply that officers are less likely to issue warnings between 5am and 6am. This time also aligns with morning rush hour and higher volumes of traffic are expected. However, the same pattern of higher citation rates are not observed during evening rush hour. The heatmap also does not show higher intensities during the end of the month. Which is what we would expect to see if officers were attempting to meet monthly ticket quotas at the end of the month.
+
+To visualize citation and warnings geospatially, a map is generated using the latitude and longitude associated to each record. While this map is helpful for understanding concentrations of citations and warning. It is misleading in show the most dominate outcomes. This is likely due to the quantity of data points overlaid on one another; however, since it is interactive areas can be zoomed in on for further insight.
+
+```{r}
+#| message: false
+#| warning: false
+#| include: false
+
+
+Arrest2023 <- read_csv("2023_arrest_data.csv", 
+                       col_types = cols(ArresteeNumber = col_skip(), 
+                                        ArrestDate = col_date(format = "%m/%d/%Y"), 
+                                        ArrestTime = col_character(), WEB_ADDRESS = col_skip(), 
+                                        PHONE_NUMBER = col_skip(), NAME = col_skip()))
+
+## Remove any outliers by setting min/max lat and long.
+min_lat = 38.6
+max_lat = 39.0
+min_lon = -77.6
+max_lon = -77.0
+
+## Using all data but excluding any coordinates that are not within coordinates
+arrest_data_clean = Arrest2023 %>%
+  filter(
+    Latitude >= min_lat,
+    Latitude <= max_lat,
+    Longitude >= min_lon,
+    Longitude <= max_lon
+  )
+
+## Include district boundaries by reading in shape file downloaded from Fairfax County site
+district_boundaries = st_read("Supervisor_Districts/Supervisor_Districts.shp")
+
+## Transform to WGS84 projection to match basemap within leaflet
+if (st_crs(district_boundaries)$epsg != 4326) {
+  district_boundaries = st_transform(district_boundaries, 4326)
+}
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+## Using leaflet to map the Outcomes across Fairfax County
+
+pal = colorFactor(
+  palette = c("red", "gold1"), 
+  domain = combined_wc_mf$outcome, 
+  levels = c("Citation", "Warning") 
+)
+
+leaflet() %>%
+  addProviderTiles(providers$OpenStreetMap) %>%
+  addPolygons(
+    data = district_boundaries,
+    fillOpacity = 0.5,
+    color = "black",
+    weight = 1,
+    popup = ~paste("District:", DISTRICT)
+  ) %>%
+  addCircleMarkers(
+    data = combined_wc_mf,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    radius = 2.5,
+    color = ~pal(outcome),
+    stroke = FALSE,
+    fillOpacity = 0.4,
+    popup = ~paste(
+      "Outcome: ", outcome, "<br>")
+  )
+```
 
 Next, through the use of Logistic Regression, the odds ratios is examined between citations and warnings for Fairfax county. Predictor variables, time of day, week progression, day of month, district are used to predict the probability that a warning or citation will occur. The results provide an odd ratios at the intercept of 0.532 which would indicate that the odds of getting a warning are less than 50/50. In other words, if pulled over for a traffic violation, it is not a flip of a coin whether you get a ticket or not. Your chance of getting a citation is higher according to the intercept generated through this logistic regression model. Additionally, the model showed factors that did increased the likelihood of getting a warning occurred in certain districts (Mount Vernon, Mason, and Franconia) and progression of the week influences leniency. In weekly progression, an odds ratio of 1.595 shows that as the week progresses from Monday to Sunday, the odds of recieving a warning increase by 59.5 %. Alternatively, factors such as time of day and day of the month showed an increased likelihood of a citation. Using the below graph, the top five odds ratio for citation and bottom five odds ratio for warnings are depicted.
 
@@ -601,117 +671,33 @@ round(auc_value_chrono, 4)
 
 ```
 
-#### Another Questions....
+#### Question 3: How do enforcement outcomes vary across districts and demographic groups?
 
-To address each of these question, first exploratory analysis should be done to gain an understanding and summary of the crime metrics for Fairfax County. This includes understanding what type of crimes occurred the most and where.
+Finally, we’ll be exploring the relationships between the outcomes of crime incidents and their district and demographic (gender, race, ethnicity) variables. Addressing this final question involved combining the three data sets of different crime outcomes: arrest data, citation data, and warning data.
 
-General crime Mapping the arrest data for a geospatial visual of where arrest occur.
+(EnforcementOutcomesByDistrict)
 
-```{r}
-#| message: false
-#| warning: false
-#| include: false
+Starting with the outcomes across different districts, we start off by performing a chi-square test to establish whether there’s a relationship between the crime outcomes and the districts they took place in.
 
+*Null Hypothesis:* Enforcement outcome is independent of police district.
 
-Arrest2023 <- read_csv("2023_arrest_data.csv", 
-                       col_types = cols(ArresteeNumber = col_skip(), 
-                                        ArrestDate = col_date(format = "%m/%d/%Y"), 
-                                        ArrestTime = col_character(), WEB_ADDRESS = col_skip(), 
-                                        PHONE_NUMBER = col_skip(), NAME = col_skip()))
+*Alternative hypothesis:* Enforcement outcome and police district are associated.
 
-## Remove any outliers by setting min/max lat and long.
-min_lat = 38.6
-max_lat = 39.0
-min_lon = -77.6
-max_lon = -77.0
+For the chi-square implementation, a contingency table for the district and outcome counts is generated: (table)
 
-## Using all data but excluding any coordinates that are not within coordinates
-arrest_data_clean = Arrest2023 %>%
-  filter(
-    Latitude >= min_lat,
-    Latitude <= max_lat,
-    Longitude >= min_lon,
-    Longitude <= max_lon
-  )
+From both the visualization above and the table output, we can see that citations are the most common outcome among the districts. However, this won’t affect the test as chi-square allows unequal margin totals. The other outcomes, arrests and warnings, vary substantially in volume across districts. Some districts (like Sully, Springfield, Providence) show particularly high citation counts, while others (Braddock, Dranesville) show lower overall enforcement volumes.
 
-## Include district boundaries by reading in shape file downloaded from Fairfax County site
-district_boundaries = st_read("Supervisor_Districts/Supervisor_Districts.shp")
+Then the test is performed:
 
-## Transform to WGS84 projection to match basemap within leaflet
-if (st_crs(district_boundaries)$epsg != 4326) {
-  district_boundaries = st_transform(district_boundaries, 4326)
-}
-```
+(Chi-Squared test)
 
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-## Using leaflet to map the Arrest data and include district layers
-leaflet() %>%
-  addProviderTiles(providers$OpenStreetMap) %>%
-  addPolygons(
-    data = district_boundaries,
-    fillOpacity = 0.5,
-    color = "black",
-    weight = 1,
-    popup = ~paste("District:", DISTRICT)
-  ) %>%
-  addCircleMarkers(
-    data = arrest_data_clean,
-    lng = ~Longitude,
-    lat = ~Latitude,
-    radius = 2.5,
-    color = "darkred",
-    stroke = FALSE,
-    fillOpacity = 0.3,
-    popup = ~paste(
-      "Case Number: ", CaseNumber, "<br>",
-      "Arrest Type: ", IBRDescription)
-  )
-```
+The chi-square statistic is extremely large, which indicates a substantial deviation between observed and expected counts. The p-value is also low enough that we reject the null hypothesis. Therefore, there is a statistically significant association between district and enforcement outcome.
 
-Next we look at the **Top 10 Arrest Type** by Incident Based Reporting (IBR) codes.
+From this, we can see that enforcement severity varies by district and district-level patterns justify further modeling.
 
-```{r}
-#| echo: false
-#| warning: false
-# By IBRCode
-arrest_count = Arrest2023 %>%
-  group_by(IBRCode) %>%
-  summarise(Count = n()) %>%
-  ungroup() %>%
-  arrange(desc(Count))
+(Enforcement Outcomes by Demographics)
 
-# Get top 10
-top_10_arrest_IBR = head(arrest_count, 10)
-
-# Add codes - General Description
-IBRCodeDetails = read.csv("IBRcodes.csv")
-
-# Reassign the codes
-top_10_arrest_decoded = top_10_arrest_IBR %>%
-  left_join(IBRCodeDetails, by = c("IBRCode" = "CODE")) %>%
-  select(IBRCode, OFFENSE, everything())
-
-top_10_arrest_cleaned = top_10_arrest_decoded %>%
-  distinct(IBRCode, OFFENSE, .keep_all = TRUE)
-
-# Decode for cleaner results
-arrest_chart = ggplot(top_10_arrest_cleaned, aes(x = reorder(OFFENSE, Count),
-                                              y = Count)) +
-  geom_bar(stat = "identity", fill = "darkred") +
-  coord_flip() +
-  labs(title = "Top 10 Arrest Type by IBR decoded",
-       x = "Offense by IBR Code",
-       y = "Number of Arrests") +
-  theme_grey() +
-  geom_text(aes(label = Count), hjust = -0.1, size = 3.5) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
-
-arrest_chart
-
-```
+(results) Performing multinomial logistic regression shows that enforcement outcomes vary systematically across both police districts and demographic groups. Certain districts, such as Providence and Sully, have higher relative odds of arrest compared to citations or warnings. Race and ethnicity are also significant predictors: Black and Hispanic individuals are more likely to be arrested rather than receive less severe enforcement actions. Gender has smaller but detectable effects. These results indicate that enforcement outcomes are influenced by both location and demographic characteristics.
 
 # [Conclusion]{.underline}
 
