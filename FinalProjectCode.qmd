@@ -3,9 +3,11 @@ title: "Final Project Code"
 editor: visual
 ---
 
-#### Final Project Code...
+#### Final Project Code
 
 ```{r}
+#| echo: true
+#| message: false
 #| warning: false
 library(tidyverse)
 library(ggplot2)
@@ -16,104 +18,10 @@ library(sf)
 library(readr)
 library(scales)
 library(tidyr)
-
-Arrest2023 <- read_csv("2023_arrest_data.csv", 
-                       col_types = cols(ArresteeNumber = col_skip(), 
-                                        ArrestDate = col_date(format = "%m/%d/%Y"), 
-                                        ArrestTime = col_character(), WEB_ADDRESS = col_skip(), 
-                                        PHONE_NUMBER = col_skip(), NAME = col_skip()))
-
-## Remove any outliers by setting min/max lat and long.
-min_lat = 38.6
-max_lat = 39.0
-min_lon = -77.6
-max_lon = -77.0
-
-## Using all data but excluding any coordinates that are not within coordinates
-arrest_data_clean = Arrest2023 %>%
-  filter(
-    Latitude >= min_lat,
-    Latitude <= max_lat,
-    Longitude >= min_lon,
-    Longitude <= max_lon
-  )
-
-## Include district boundaries by reading in shape file downloaded from Fairfax County site
-district_boundaries = st_read("Supervisor_Districts/Supervisor_Districts.shp")
-
-## Transform to WGS84 projection to match basemap within leaflet
-if (st_crs(district_boundaries)$epsg != 4326) {
-  district_boundaries = st_transform(district_boundaries, 4326)
-}
-```
-
-```{r}
-#| warning: false
-## Using leaflet to map the Arrest data and include district layers
-leaflet() %>%
-  addProviderTiles(providers$OpenStreetMap) %>%
-  addPolygons(
-    data = district_boundaries,
-    fillOpacity = 0.5,
-    color = "black",
-    weight = 1,
-    popup = ~paste("District:", DISTRICT)
-  ) %>%
-  addCircleMarkers(
-    data = arrest_data_clean,
-    lng = ~Longitude,
-    lat = ~Latitude,
-    radius = 3,
-    color = "darkred",
-    stroke = FALSE,
-    fillOpacity = 0.4,
-    popup = ~paste(
-      "Case Number: ", CaseNumber, "<br>",
-      "Arrest Type: ", IBRDescription)
-  )
-```
-
-```{r}
-# By IBRCode
-arrest_count = Arrest2023 %>%
-  group_by(IBRCode) %>%
-  summarise(Count = n()) %>%
-  ungroup() %>%
-  arrange(desc(Count))
-
-# Get top 10
-top_10_arrest_IBR = head(arrest_count, 10)
-
-# Add codes - General Description
-IBRCodeDetails = read.csv("IBRcodes.csv")
-
-# Reassign the codes
-top_10_arrest_decoded = top_10_arrest_IBR %>%
-  left_join(IBRCodeDetails, by = c("IBRCode" = "CODE")) %>%
-  select(IBRCode, OFFENSE, everything())
-
-top_10_arrest_cleaned = top_10_arrest_decoded %>%
-  distinct(IBRCode, OFFENSE, .keep_all = TRUE)
-
-# Decode for cleaner results
-arrest_chart = ggplot(top_10_arrest_cleaned, aes(x = reorder(OFFENSE, Count),
-                                              y = Count)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
-  coord_flip() +
-  labs(title = "Top 10 Arrest Type by IBR decoded",
-       x = "Offense by IBR Code",
-       y = "Number of Arrests") +
-  theme_grey() +
-  geom_text(aes(label = Count), hjust = -0.1, size = 3.5) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
-
-arrest_chart
-```
-
-```{r}
-library(readr)
 library(lubridate)
+library(pheatmap)
 
+# Read in the raw data for Warnings and Citations
 warnings = read_csv("2023_warning_data.csv", 
                          col_types = cols(Warnings_Date = col_date(format = "%m/%d/%Y"), 
                                           WEB_ADDRESS = col_skip(), PHONE_NUMBER = col_skip(), 
@@ -152,7 +60,7 @@ citations_processed = citations %>%
     data_type = "Citation"
   ) %>%
   select(
-    outcome, Gender, Year, Month, DayOfMonth, Time, Offense_Description = Charge,
+    outcome, Gender, Year, Month, DayOfMonth, ViolationDate, Time, Offense_Description = Charge,
     District = DISTRICT, Race, Ethnicity, Latitude, Longitude, OfficerID = ID, data_type
   )
 
@@ -172,7 +80,7 @@ warnings_processed = warnings %>%
     data_type = "Warning"
   ) %>%
   select(
-    outcome, Gender, Year, Month, DayOfMonth, Time, Offense_Description, District = DISTRICT, Race, 
+    outcome, Gender, Year, Month, DayOfMonth, ViolationDate, Time, Offense_Description, District = DISTRICT, Race, 
     Ethnicity, Latitude = Lat, Longitude = Long, OfficerID = Officer_ID, data_type
   )
 
@@ -191,10 +99,10 @@ combined_wc$District = tools::toTitleCase(tolower(combined_wc$District))
 ## Examining Unverified data
 ## After examination, unverified only makes up 0.0143 or 1.43% of the data set, so we will remove
 ## because it is a very small portion of the total proportion. 
-combined_wc %>%
-  count(District) %>%
-  mutate(Proportion = n / sum(n)) %>%
-  arrange(desc(n))
+# combined_wc %>%
+#  count(District) %>%
+#  mutate(Proportion = n / sum(n)) %>%
+#  arrange(desc(n))
 
 ## Filter out Unverified and NA
 combined_wc = combined_wc %>%
@@ -207,6 +115,23 @@ combined_wc = combined_wc %>%
 combined_wc_mf = combined_wc %>%
   filter(Gender != "Other/Unknown")
 
+
+## Stacked Bar chart for Outcome and Gender
+ggplot(combined_wc_mf, aes(x = outcome, fill = Gender)) +
+  geom_bar() +
+  labs(
+    title = "Count of Outcomes by Gender",
+    x = "Outcome Type",
+    y = "# of Incident",
+    fill = "Gender"
+  ) + theme_gray() + theme(plot.title = element_text(hjust = 0.5)) + 
+  scale_fill_manual(values = c("Female" = "lightpink2", "Male" = "lightsteelblue"))
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 ## Now for some visuals: Gender Chart
 ## Examining the proportion of stops resulting in a Warning Vs Citation
 ## the Warning rate is the proportion of incidents that are warnings.
@@ -230,21 +155,358 @@ gender_chart = ggplot(gender_warning_rate,
     x = "Gender",
     y = "Warning Rate"
   ) + theme_gray() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) +
-  scale_fill_manual(values = c("Female" = "pink", "Male" = "skyblue"))
+  scale_fill_manual(values = c("Female" = "lightpink2", "Male" = "lightsteelblue"))
 
 gender_chart
 ```
+
 ```{r}
+#| echo: true
+#| message: false
+#| warning: false
 ## Now the Chi-Squared Test starting with the Contingency Table
 contingency_tbl = combined_wc_mf %>%
   filter(Gender %in% c("Male", "Female")) %>%
   select(Gender, BinaryOutcome) %>%
   table()
 
-contingency_tbl
-
 chi_sq_results = chisq.test(contingency_tbl)
 
-chi_sq_results
+expected_counts = chi_sq_results$expected
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+# Heatmap
+library(pheatmap)
+# observed count
+observed_counts = chi_sq_results$observed
+# Calculated expected above.
+# Calculate residuals
+pearson_residuals = chi_sq_results$residuals
+
+# Calculate contributions to chi-square statistic
+contributions = (observed_counts - expected_counts)^2 / expected_counts
+
+total_chi_square = chi_sq_results$statistic
+
+percentage_contributions = 100 * contributions / total_chi_square
+colnames(percentage_contributions) = c("Citation", "Warning")
+pheatmap(percentage_contributions,
+         display_numbers = TRUE,
+         cluster_rows = FALSE,
+         cluster_cols = FALSE,
+         main = "Percentage Contribution to Chi-Square Statistic",
+         fontsize = 11,
+         fontsize_row = 11,
+         fontsize_col = 11,
+         fontsize_number = 15
+         )
+```
+
+```{r}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(viridis)
+library(tidyr)
+
+combined_wc_mf = combined_wc_mf %>%
+  mutate(
+    Hour = hour(Time),
+    Minute = minute(Time),
+    Time_of_day = case_when(
+      Hour >= 5 & Hour < 10 ~ "Morning Rush (0500-1000)",
+      Hour >= 10 & Hour < 15 ~ "Daytime (1000-1500)",
+      Hour >= 15 & Hour < 19 ~ "Evening Rush (1500-1900)",
+      TRUE ~ "Night/Late Night (1900-0500)"
+    ) 
+  )
+
+stop_count_by_day = combined_wc_mf %>%
+  group_by(DayOfMonth) %>%
+  summarise(Stop_Count = n()) %>%
+  ungroup()
+
+# Make interactive heatmap using plotly
+library(plotly)
+
+heatmap_days = combined_wc_mf %>%
+  group_by(DayOfMonth, Hour) %>%
+  summarise(
+    TotalOutcomes = n(),
+    TotalCitations = sum(BinaryOutcome == 0, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    Citation_Rate = TotalCitations/TotalOutcomes
+  ) %>%
+  tidyr::complete(DayOfMonth, Hour, fill = list(TotalOutcomes = 0, Citation_Rate = 0))
+
+# label for x-axis
+all_hours = as.character(0:23)
+
+# Convert to factor
+heatmap_days$Hour = factor(heatmap_days$Hour)
+heatmap_days$DayOfMonth = factor(heatmap_days$DayOfMonth)
+
+# Text for interactive part
+heatmap_days = heatmap_days %>%
+  mutate(text = paste0("Hour: ", Hour, "\n", "Day: ", DayOfMonth, "\n", "Citation Rate: ",round(Citation_Rate,2)))
+
+## trying to get all axes
+plot_heatmap_discrete_axes = ggplot(
+  heatmap_days, 
+  aes(x = Hour, y = DayOfMonth, fill = Citation_Rate, text = text)
+) +
+  geom_tile(aes(width = 1, height = 1), color = "white", linewidth = 0.1) +
+  scale_fill_viridis(
+    option = "magma",
+    direction = -1,
+    name = "Citation Rate",
+    labels = scales::percent
+  ) +
+  scale_x_discrete(name = "Hour of Day (0 = Midnight, 12 = Noon)", drop = FALSE) + 
+  scale_y_discrete(drop = FALSE) + 
+  labs(
+    title = "Citation Rate by Day of Month and Hour of Day",
+    subtitle = "Higher intensity (darker color) indicates a higher proportion of Citations",
+    y = "Day of the Month"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(vjust = 0.1, hjust = 0.1),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+ggplotly(plot_heatmap_discrete_axes, tooltip = "text")
+```
+
+```{r}
+plot_heatmap_discrete_axes = ggplot(
+  heatmap_days, 
+  aes(x = Hour, y = DayOfMonth, fill = Citation_Rate, text = text)
+) +
+  geom_tile(aes(width = 1, height = 1), color = "white", linewidth = 0.1) +
+  scale_fill_viridis(
+    option = "magma",
+    direction = -1,
+    name = "Citation Rate",
+    labels = scales::percent
+  ) +
+  scale_x_discrete(name = "Hour of Day (0 = Midnight, 12 = Noon)", drop = FALSE) + 
+  scale_y_discrete(drop = FALSE) + 
+  labs(
+    title = "Citation Rate by Day of Month and Hour of Day",
+    subtitle = "Higher intensity (darker color) indicates a higher proportion of Citations",
+    y = "Day of the Month"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(vjust = 0.1, hjust = 0.1),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+plot_heatmap_discrete_axes
+```
+
+```{r}
+Arrest2023 <- read_csv("2023_arrest_data.csv", 
+                       col_types = cols(ArresteeNumber = col_skip(), 
+                                        ArrestDate = col_date(format = "%m/%d/%Y"), 
+                                        ArrestTime = col_character(), WEB_ADDRESS = col_skip(), 
+                                        PHONE_NUMBER = col_skip(), NAME = col_skip()))
+
+## Remove any outliers by setting min/max lat and long.
+min_lat = 38.6
+max_lat = 39.0
+min_lon = -77.6
+max_lon = -77.0
+
+## Using all data but excluding any coordinates that are not within coordinates
+arrest_data_clean = Arrest2023 %>%
+  filter(
+    Latitude >= min_lat,
+    Latitude <= max_lat,
+    Longitude >= min_lon,
+    Longitude <= max_lon
+  )
+
+## Include district boundaries by reading in shape file downloaded from Fairfax County site
+district_boundaries = st_read("Supervisor_Districts/Supervisor_Districts.shp")
+
+## Transform to WGS84 projection to match basemap within leaflet
+if (st_crs(district_boundaries)$epsg != 4326) {
+  district_boundaries = st_transform(district_boundaries, 4326)
+}
+```
+
+```{r}
+pal = colorFactor(
+  palette = c("red", "gold1"), 
+  domain = combined_wc_mf$outcome, 
+  levels = c("Citation", "Warning") 
+)
+
+leaflet() %>%
+  addProviderTiles(providers$OpenStreetMap) %>%
+  addPolygons(
+    data = district_boundaries,
+    fillOpacity = 0.5,
+    color = "black",
+    weight = 1,
+    popup = ~paste("District:", DISTRICT)
+  ) %>%
+  addCircleMarkers(
+    data = combined_wc_mf,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    radius = 2.5,
+    color = ~pal(outcome),
+    stroke = FALSE,
+    fillOpacity = 0.4,
+    popup = ~paste(
+      "Outcome: ", outcome, "<br>")
+  )
+```
+
+```{r}
+library(dplyr)
+library(lubridate)
+library(caTools)
+library(pROC) 
+
+#Add HourOfDay
+combined_wc_mf = combined_wc_mf %>%
+  mutate(
+    HourOfDay = hour(Time))
+
+combined_wc_mf = combined_wc_mf %>%
+  mutate(
+    DayOfWeek = factor(
+      wday(ViolationDate, label = TRUE, week_start = 1),
+      levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
+
+model_columns_chrono = c(
+  "BinaryOutcome",
+  "HourOfDay",
+  "DayOfMonth",
+  "DayOfWeek",
+  "District"
+)
+
+data_for_modeling = combined_wc_mf %>%
+  select(all_of(model_columns_chrono)) %>%
+  mutate(across(c(HourOfDay, DayOfMonth, DayOfWeek, District), as.factor)) %>%
+  mutate(BinaryOutcome = factor(BinaryOutcome, levels = c(0, 1))) %>%
+  na.omit()
+
+data_for_modeling
+
+set.seed(42)
+
+sample_split_chrono = sample.split(
+  Y = data_for_modeling$BinaryOutcome,
+  SplitRatio = 0.70
+)
+
+train_set_chrono = subset(data_for_modeling, sample_split_chrono == TRUE)
+test_set_chrono = subset(data_for_modeling, sample_split_chrono == FALSE)
+
+logistic_model_chrono = glm(
+  formula = BinaryOutcome ~ .,
+  data = train_set_chrono,
+  family = binomial(link = "logit")
+)
+
+odds_ratio_chrono = exp(coef(logistic_model_chrono))
+
+odds_ratio_df_chrono = data.frame(
+  Variable = names(odds_ratio_chrono),
+  OddsRatio = odds_ratio_chrono
+)
+
+print(odds_ratio_df_chrono %>%
+        filter(Variable != "(Intercept)") %>%
+        arrange(OddsRatio) %>%
+        head(30))
+```
+
+```{r}
+## new visual
+top_citation_chrono = odds_ratio_df_chrono %>%
+  filter(Variable != "(Intercept)") %>%
+  arrange(OddsRatio) %>%
+  head(5) %>%
+  mutate(Effect = "Stronger Citation Likelihood")
+
+top_warning_chrono = odds_ratio_df_chrono %>%
+  filter(Variable != "(Intercept)") %>%
+  arrange(desc(OddsRatio)) %>%
+  head(5) %>%
+  mutate(Effect = "Stronger Warning Likelihood")
+
+plot_data_chrono = bind_rows(top_citation_chrono, top_warning_chrono)
+
+plot_data_chrono = plot_data_chrono %>%
+  mutate(
+    Variable = gsub("HourOfDay", "Hr:", Variable),
+    Variable = gsub("DayOfMonth", "Day:", Variable),
+    Variable = gsub("DayOfWeek", "Week:", Variable),
+    Variable = gsub("District", "Dist:", Variable)
+  )
+
+odds_ratio_plot_chrono = ggplot(plot_data_chrono, aes(x = Variable, y = OddsRatio, fill = Effect)) +
+  geom_bar(stat = "identity", position = "identity") +
+  geom_hline(yintercept = 1.0, linetype = "dashed", color = "black", linewidth = 1) +
+  scale_y_continuous(
+    trans = 'log2', 
+    breaks = c(0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 2.5),
+    labels = c("0.3", "0.5", "0.7", "1.0", "1.5", "2.0", "2.5")
+  ) +
+  labs(
+    title = "Odds Ratios of Date and Location Factors on Issuing a Warning",
+    subtitle = "Based on Hour, Day of Month, Day of Week, and District",
+    x = "Predictor Variable",
+    y = "Odds Ratio (Warning vs. Citation)",
+    fill = "Enforcement Discretion"
+  ) +
+  scale_fill_manual(values = c("Stronger Citation Likelihood" = "coral3", "Stronger Warning Likelihood" = "gold1")) +
+  
+  # Flip coordinates for a horizontal bar chart (easier to read labels)
+  coord_flip() +
+  theme_grey(base_size = 11)
+
+odds_ratio_plot_chrono
+```
+
+```{r}
+#| echo: true
+## Calculate AUC
+library(pROC)
+
+probability_chrono = predict(
+  logistic_model_chrono,
+  newdata = test_set_chrono,
+  type = "response"
+)
+
+roc_obj_chrono = roc(
+  response = test_set_chrono$BinaryOutcome,
+  predictor = probability_chrono,
+  levels = c(0,1) 
+)
+auc_value_chrono = auc(roc_obj_chrono)
+
+round(auc_value_chrono, 4)
 ```
 
